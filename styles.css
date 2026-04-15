@@ -1,0 +1,133 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: #020c1b;
+  color: white;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.left {
+  max-width: 520px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border: 1px solid #1f8f6a;
+  border-radius: 999px;
+  color: #38d39f;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #38d39f;
+  border-radius: 50%;
+}
+
+h1 {
+  font-size: 64px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+h1 span {
+  color: #2ecc71;
+}
+
+.left p {
+  color: #9aa4b2;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.cta {
+  background: #1f8f6a;
+  border: none;
+  padding: 15px 28px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cta:hover {
+  background: #27ae60;
+}
+
+/* RIGHT */
+.right {
+  text-align: center;
+}
+
+/* CONTENEDOR DEL LOGO */
+.circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  position: relative;
+}
+
+/* GLOW */
+.circle::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46,204,113,0.15), transparent);
+  z-index: -1;
+}
+
+/* LOGO BIEN AJUSTADO */
+.logo {
+  width: 120px;   /* 🔥 controla tamaño aquí */
+  height: auto;
+  object-fit: contain;
+}
+
+/* TEXTO */
+.right h2 {
+  font-size: 28px;
+  color: #38d39f;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #7f8c8d;
+  letter-spacing: 1px;
+}
