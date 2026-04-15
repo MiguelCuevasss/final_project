@@ -27,7 +27,6 @@ body {
   justify-content: space-between;
 }
 
-/* LEFT */
 .left {
   max-width: 520px;
 }
@@ -88,7 +87,6 @@ h1 span {
   text-align: center;
 }
 
-/* CONTENEDOR DEL LOGO */
 .circle {
   width: 220px;
   height: 220px;
@@ -101,7 +99,6 @@ h1 span {
   position: relative;
 }
 
-/* GLOW */
 .circle::before {
   content: "";
   position: absolute;
@@ -112,14 +109,12 @@ h1 span {
   z-index: -1;
 }
 
-/* LOGO BIEN AJUSTADO */
 .logo {
-  width: 120px;   /* 🔥 controla tamaño aquí */
+  width: 120px;   
   height: auto;
   object-fit: contain;
 }
 
-/* TEXTO */
 .right h2 {
   font-size: 28px;
   color: #38d39f;
@@ -131,3 +126,5 @@ h1 span {
   color: #7f8c8d;
   letter-spacing: 1px;
 }
+
+/* Fin del HERO */
