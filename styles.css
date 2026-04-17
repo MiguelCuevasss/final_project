@@ -167,6 +167,49 @@ h1 span {
 /* Hasta aqui termina el footer */
 
 
+/* Estilos para las cartas */
+.cards-section {
+  padding: 80px 0;
+}
+
+.cards-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.card {
+  background: #0a1a2f;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.card h3 {
+  color: #38d39f;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #9aa4b2;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(56, 211, 159, 0.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Hasta aqui terminan las cartas */
+
+
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
@@ -178,6 +221,10 @@ h1 span {
     flex-direction: column;
     gap: 20px;
     text-align: center;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .left {
