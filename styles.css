@@ -1,22 +1,13 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-body {
-  background: #020c1b;
-  color: white;
-}
-
 /* HERO */
 .hero {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+body { 
+  background: #020c1b; color: white; 
 }
 
 .container {
@@ -128,3 +119,47 @@ h1 span {
 }
 
 /* Fin del HERO */
+
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px;
+  }
+
+  .left {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .right {
+    order: -1;
+  }
+}
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 32px;
+  }
+
+  .left p {
+    font-size: 14px;
+  }
+
+  .cta {
+    width: 100%;
+  }
+
+  .circle {
+    width: 160px;
+    height: 160px;
+  }
+
+  .logo {
+    width: 90px;
+  }
+}
