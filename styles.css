@@ -1,8 +1,9 @@
 /* HERO */
 .hero {
-  min-height: 100vh;
+  min-height: auto;
+  padding: 90px 0 40px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -101,7 +102,7 @@ h1 span {
 }
 
 .logo {
-  width: 120px;   
+  width: 180px;   
   height: auto;
   object-fit: contain;
 }
