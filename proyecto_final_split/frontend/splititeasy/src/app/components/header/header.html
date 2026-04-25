@@ -1,0 +1,24 @@
+<html><header class="main-header">
+  <div class="header-container">
+    <a routerLink="/" class="brand" aria-label="Ir al inicio">
+      <img src="assets/logo.png" alt="SplitItEasy logo" class="brand-logo" />
+      <span class="brand-name">SplitItEasy</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Abrir menú"
+      (click)="toggleMenu()">
+    </button>
+
+    <nav class="nav" [class.nav-open]="isMenuOpen">
+      <a routerLink="/" fragment="inicio" (click)="closeMenu()">Inicio</a>
+      <a routerLink="/" fragment="beneficios" (click)="closeMenu()">Beneficios</a>
+      <a routerLink="/" fragment="como-funciona" (click)="closeMenu()">Cómo funciona</a>
+      <a routerLink="/" fragment="contacto" (click)="closeMenu()">Contacto</a>
+      <a routerLink="/registro" class="nav-cta" (click)="closeMenu()">Empieza gratis</a>
+    </nav>
+  </div>
+</header>
+</html>
