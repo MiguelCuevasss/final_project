@@ -1,4 +1,4 @@
-<html><header class="main-header">
+<header class="main-header">
   <div class="header-container">
     <a routerLink="/" class="brand" aria-label="Ir al inicio">
       <img src="assets/logo.png" alt="SplitItEasy logo" class="brand-logo" />
@@ -10,6 +10,7 @@
       type="button"
       aria-label="Abrir menú"
       (click)="toggleMenu()">
+      ☰
     </button>
 
     <nav class="nav" [class.nav-open]="isMenuOpen">
@@ -21,4 +22,3 @@
     </nav>
   </div>
 </header>
-</html>

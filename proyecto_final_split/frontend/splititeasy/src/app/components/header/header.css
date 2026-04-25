@@ -16,6 +16,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
+    position: relative;
 }
 
 .brand {
@@ -54,7 +55,7 @@
 
 .nav a:hover,
 .nav a.active {
-  color: #38d39f;
+    color: #38d39f;
 }
 
 .nav-cta {
@@ -79,9 +80,11 @@
     cursor: pointer;
 }
 
+/* Responsive */
 @media (max-width: 900px) {
-      .header-container {
+  .header-container {
     min-height: 72px;
+    position: relative;
   }
 
   .menu-toggle {
@@ -89,36 +92,31 @@
   }
 
   .nav {
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    width: 100%;
     flex-direction: column;
     align-items: stretch;
-    gap: 0;
-    padding: 1rem 5%;
     background: rgba(2, 12, 27, 0.98);
+    padding: 1rem 5%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    z-index: 999;
   }
 
   .nav.nav-open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    display: flex;
   }
 
   .nav a {
     padding: 1rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
-  
-    .nav-cta {
+
+  .nav-cta {
     margin-top: 1rem;
     text-align: center;
     border-bottom: none !important;
   }
-}
+} 
