@@ -1,0 +1,91 @@
+/* Fondo general */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0b1220; /* azul oscuro */
+  color: #e6edf3;
+}
+
+/* Sección principal */
+.upgrade-page {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Contenedor */
+.container {
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+}
+
+.container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.container p {
+  color: #9fb3c8;
+  margin-bottom: 40px;
+}
+
+/* Grid de planes */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Card base */
+.plan-card {
+  background: linear-gradient(145deg, #111a2e, #0e1627);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover */
+.plan-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(100, 160, 255, 0.4);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* Título */
+.plan-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color:aqua
+}
+
+/* Precio */
+.price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0057b3;
+  margin-bottom: 20px;
+}
+
+/* Plan destacado */
+.featured {
+  border: 1px solid #4da3ff;
+  transform: scale(1.05);
+  position: relative;
+}
+
+.featured::before {
+  content: "Más popular";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #4da3ff;
+  color: #0b1220;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
