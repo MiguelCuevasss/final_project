@@ -211,36 +211,6 @@ h1 span {
 /* Hasta aqui terminan las cartas */
 
 
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-    text-align: center;
-    gap: 50px;
-  }
-
-  .footer-container {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .cards-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .left {
-    max-width: 100%;
-  }
-
-  h1 {
-    font-size: 42px;
-  }
-
-  .right {
-    order: -1;
-  }
-}
-
 /* Aquí está lo de cómo funciona, problema y pasos (le puse story porque es como el storytelling de la app */
 .story-section {
   padding: 18px 0 54px;
@@ -450,4 +420,36 @@ h1 span {
 .cta-main:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(46, 204, 113, 0.25);
+}
+
+/*Responsive*/
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .left {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .right {
+    order: -1;
+  }
 }

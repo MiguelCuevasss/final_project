@@ -1,0 +1,87 @@
+<section class="auth-section">
+  <div class="auth-container">
+
+    <div class="auth-box">
+
+      <span class="badge">
+        <span class="dot"></span>
+        Bienvenido a SplitItEasy
+      </span>
+
+      <h2>
+        {{ isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }}
+      </h2>
+
+      <p class="subtitle">
+        {{ isLogin 
+          ? 'Inicia sesión para continuar' 
+          : 'Empieza a gestionar tus gastos fácilmente' }}
+      </p>
+
+      <form (submit)="submitForm($event)">
+
+        <div *ngIf="!isLogin" class="row">
+          <div class="input-group">
+            <input type="text" placeholder="Nombre"
+              [(ngModel)]="formData.name" name="name" required>
+          </div>
+
+          <div class="input-group">
+            <input type="text" placeholder="Apellido"
+              [(ngModel)]="formData.lastname" name="lastname" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input type="email" placeholder="Correo electrónico"
+            [(ngModel)]="formData.email" name="email" required>
+        </div>
+
+        <div class="input-group">
+          <input type="password" placeholder="Contraseña"
+            [(ngModel)]="formData.password" name="password" required>
+        </div>
+
+        <div class="input-group" *ngIf="!isLogin">
+          <input 
+            type="password" 
+            placeholder="Confirmar contraseña"
+            [(ngModel)]="formData.confirmPassword" 
+            name="confirmPassword" 
+            required
+            [class.input-error]="passwordsDoNotMatch()"
+          >
+
+          <p *ngIf="passwordsDoNotMatch()" class="field-error">
+            Las contraseñas no coinciden
+          </p>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-msg">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="success-msg">
+          {{ successMessage }}
+        </div>
+
+        <button 
+          class="auth-btn"
+          [disabled]="!isLogin && passwordsDoNotMatch()"
+        >
+          {{ isLogin ? 'Iniciar sesión' : 'Crear cuenta' }}
+        </button>
+
+      </form>
+
+      <p class="switch">
+        {{ isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+        <span (click)="toggleMode()">
+          {{ isLogin ? 'Regístrate' : 'Inicia sesión' }}
+        </span>
+      </p>
+
+    </div>
+
+  </div>
+</section>

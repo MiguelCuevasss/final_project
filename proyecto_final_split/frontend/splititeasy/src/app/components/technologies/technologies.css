@@ -1,0 +1,87 @@
+.tech-section {
+  background: #020c1b;
+  min-height: 100vh;
+  padding: 120px 0 80px;
+}
+
+.tech-container {
+  width: 90%;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.tech-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.tech-header h2 {
+  font-size: 42px;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.tech-header span {
+  color: #38d39f;
+}
+
+.tech-header p {
+  color: #9aa4b2;
+  max-width: 600px;
+  margin: auto;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #1f8f6a;
+  border-radius: 999px;
+  color: #38d39f;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #38d39f;
+  border-radius: 50%;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.tech-card {
+  background: #0a1a2f;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.tech-card h3 {
+  color: #38d39f;
+  margin-bottom: 10px;
+}
+
+.tech-card p {
+  color: #9aa4b2;
+  font-size: 14px;
+}
+
+.tech-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 211, 159, 0.4);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .tech-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
