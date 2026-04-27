@@ -1,0 +1,148 @@
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: rgba(2, 12, 27, 0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.header-container {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18px; 
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 100px; 
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-name {
+  font-size: 26px;
+  font-weight: 600;
+  color: white;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav a {
+    color: #c7d2df;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav a:hover,
+.nav a.active {
+    color: #38d39f;
+}
+
+.nav-cta {
+    padding: 0.85rem 1.4rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1f8f6a, #2ecc71);
+    color: #ffffff !important;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(46, 204, 113, 0.18);
+}
+
+.nav-cta:hover {
+    transform: translateY(-2px);
+}
+
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  margin-left: 2rem;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.greeting {
+  font-weight: 600;
+}
+
+.date {
+  opacity: 0.85;
+  font-size: 0.8rem;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .header-info {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-container {
+    min-height: 72px;
+    position: relative;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    background: rgba(2, 12, 27, 0.98);
+    padding: 1rem 5%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 999;
+  }
+
+  .nav.nav-open {
+    display: flex;
+  }
+
+  .nav a {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-cta {
+    margin-top: 1rem;
+    text-align: center;
+    border-bottom: none !important;
+  }
+} 
