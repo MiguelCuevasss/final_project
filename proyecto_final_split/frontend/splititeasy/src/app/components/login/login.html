@@ -43,11 +43,32 @@
         </div>
 
         <div class="input-group" *ngIf="!isLogin">
-          <input type="password" placeholder="Confirmar contraseña"
-            [(ngModel)]="formData.confirmPassword" name="confirmPassword" required>
+          <input 
+            type="password" 
+            placeholder="Confirmar contraseña"
+            [(ngModel)]="formData.confirmPassword" 
+            name="confirmPassword" 
+            required
+            [class.input-error]="passwordsDoNotMatch()"
+          >
+
+          <p *ngIf="passwordsDoNotMatch()" class="field-error">
+            Las contraseñas no coinciden
+          </p>
         </div>
 
-        <button class="auth-btn">
+        <div *ngIf="errorMessage" class="error-msg">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="success-msg">
+          {{ successMessage }}
+        </div>
+
+        <button 
+          class="auth-btn"
+          [disabled]="!isLogin && passwordsDoNotMatch()"
+        >
           {{ isLogin ? 'Iniciar sesión' : 'Crear cuenta' }}
         </button>
 
