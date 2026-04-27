@@ -21,8 +21,12 @@
       <a routerLink="/login">Login</a>
       <a routerLink="/technologies">Tecnologías</a>
       <a routerLink="/login" [queryParams]="{ mode: 'register' }"  class="nav-cta" (click)="closeMenu()">Empieza gratis </a>
-      <nav>
-</nav>
     </nav>
+
+    <div class="header-info">
+      <span class="greeting">{{ '' | greeting }}, usuario</span>
+      <span class="date">Hoy es {{ today | date:'fullDate' }}</span>
+    </div>
+
   </div>
 </header>
