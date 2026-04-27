@@ -1,7 +1,7 @@
 <header class="main-header">
   <div class="header-container">
     <a routerLink="/" class="brand" aria-label="Ir al inicio">
-      <img src="assets/logo.png" alt="SplitItEasy logo" class="brand-logo" />
+     <img src="/logo.png" alt="SplitItEasy logo" class="brand-logo" />
       <span class="brand-name">SplitItEasy</span>
     </a>
 
@@ -18,7 +18,11 @@
       <a routerLink="/upgrade" (click)="closeMenu()">Upgrade</a>
       <a routerLink="/como-funciona" (click)="closeMenu()">Cómo funciona</a>
       <a routerLink="/contacto" (click)="closeMenu()">Contacto</a>
-      <a routerLink="/registro" class="nav-cta" (click)="closeMenu()">Empieza gratis</a>
+      <a routerLink="/login">Login</a>
+      <a routerLink="/technologies">Tecnologías</a>
+      <a routerLink="/login" [queryParams]="{ mode: 'register' }"  class="nav-cta" (click)="closeMenu()">Empieza gratis </a>
+      <nav>
+</nav>
     </nav>
   </div>
 </header>
