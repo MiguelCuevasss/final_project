@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { GreetingPipe } from '../../pipes/greeting-pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, GreetingPipe, DatePipe],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
@@ -20,4 +22,7 @@ export class HeaderComponent {
   closeMenu(): void {
     this.isMenuOpen = false;
   }
+
+  today = new Date();
+
 }
