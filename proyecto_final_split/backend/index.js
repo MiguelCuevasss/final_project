@@ -1,38 +1,23 @@
 const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 
-
-let messages = [];
-
-const generateId = () => {
-  return messages.length > 0
-    ? messages[messages.length - 1].id + 1
-    : 1;
-};
-
-app.post('/chat', (req, res) => {
-  const { userMessage, amount } = req.body;
-
-  const newMessage = {
-    id: generateId(),
-    userMessage,
-    amount,
-    botResponse: "Gasto registrado correctamente",
-    date: new Date()
-  };
-
-  messages.push(newMessage);
-
-  res.status(200).json(newMessage);
+app.get('/', (req, res) => {
+res.json({
+message: 'API de Chat con IA funcionando correctamente'
+});
 });
 
-app.get('/chat', (req, res) => {
-  res.status(200).json(messages);
-});
+const chatRoutes = require('./routes/chat.routes');
+app.use('/api/chat', chatRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
