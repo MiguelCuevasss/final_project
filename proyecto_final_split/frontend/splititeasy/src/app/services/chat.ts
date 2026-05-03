@@ -15,7 +15,7 @@ export class ChatService {
   }
 
   sendMessage(message: string): Observable<any> {
-    return this.http.post(this.apiUrl, { message });
+  return this.http.post<any>(this.apiUrl, { message });
   }
 
   updateMessage(id: number, message: string): Observable<any> {

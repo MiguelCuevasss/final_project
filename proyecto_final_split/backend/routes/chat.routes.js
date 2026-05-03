@@ -11,6 +11,11 @@ router.get('/', (req, res) => {
 
 // POST - Enviar mensaje a la IA
 router.post('/', async (req, res) => {
+
+  console.log('Mensaje recibido:', req.body);
+
+  const { message } = req.body;
+
   try {
     const { message } = req.body;
 
