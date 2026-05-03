@@ -57,10 +57,11 @@ router.post('/', async (req, res) => {
 
     res.status(201).json(conversation);
   } catch (error) {
-    res.status(500).json({
-      error: 'Error al comunicarse con la IA',
-      details: error.message
-    });
+  console.error('OpenRouter Error:', error.response?.data || error.message);
+  res.status(500).json({
+    error: 'Error al comunicarse con la IA',
+    details: error.response?.data || error.message
+  });
   }
 });
 
