@@ -4,17 +4,19 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-
   private users: any[] = [];
+  private currentUser: any = null;
 
   constructor() {
-    const data = localStorage.getItem('users');
-    this.users = data ? JSON.parse(data) : [];
+    const usersData = localStorage.getItem('users');
+    const currentUserData = localStorage.getItem('currentUser');
+
+    this.users = usersData ? JSON.parse(usersData) : [];
+    this.currentUser = currentUserData ? JSON.parse(currentUserData) : null;
   }
 
   register(user: any) {
     const email = user.email.trim().toLowerCase();
-
     const exists = this.users.find(u => u.email === email);
 
     if (exists) {
@@ -25,8 +27,10 @@ export class AuthService {
     }
 
     const newUser = {
-      ...user,
-      email
+      name: user.name.trim(),
+      lastname: user.lastname.trim(),
+      email,
+      password: user.password
     };
 
     this.users.push(newUser);
@@ -39,8 +43,10 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
+    const normalizedEmail = email.trim().toLowerCase();
+
     const user = this.users.find(
-      u => u.email === email.trim().toLowerCase() && u.password === password
+      u => u.email === normalizedEmail && u.password === password
     );
 
     if (!user) {
@@ -50,10 +56,27 @@ export class AuthService {
       };
     }
 
+    this.currentUser = {
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email
+    };
+
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
     return {
       success: true,
       message: 'Login exitoso',
-      user
+      user: this.currentUser
     };
+  }
+
+  getCurrentUser() {
+    return this.currentUser;
+  }
+
+  logout() {
+    this.currentUser = null;
+    localStorage.removeItem('currentUser');
   }
 }

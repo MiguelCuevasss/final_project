@@ -1,0 +1,147 @@
+.groups-section {
+  min-height: calc(100vh - 96px);
+  background: #ffffff;
+  padding: 24px 0 40px;
+  overflow-x: hidden;
+}
+
+.groups-shell {
+  width: min(1180px, calc(100vw - 72px));
+  margin-left: 24px;
+  display: grid;
+  grid-template-columns: 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.groups-sidebar {
+  background: linear-gradient(180deg, #5a6778, #425062);
+  border-radius: 26px;
+  padding: 22px;
+  min-height: calc(100vh - 150px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.sidebar-top h2 {
+  color: #ffffff;
+  font-size: 28px;
+  margin: 18px 0 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 211, 159, 0.35);
+  color: #38d39f;
+  font-size: 13px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #38d39f;
+  border-radius: 50%;
+}
+
+.create-box {
+  display: flex;
+  gap: 10px;
+}
+
+.create-box input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #0a1a2f;
+  color: white;
+  outline: none;
+}
+
+.create-box button {
+  border: none;
+  border-radius: 14px;
+  padding: 0 18px;
+  background: linear-gradient(90deg, #1f8f6a, #2ecc71);
+  color: white;
+  cursor: pointer;
+}
+
+.sidebar-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0a1a2f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 14px;
+  cursor: pointer;
+  transition: 0.25s;
+  text-decoration: none;
+}
+
+.group-item:hover {
+  border-color: rgba(56, 211, 159, 0.7);
+}
+
+.group-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #1f8f6a, #2ecc71);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.group-meta h3 {
+  color: #ffffff;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.group-meta p {
+  color: #9aa4b2;
+  font-size: 13px;
+}
+
+.error-msg {
+  color: #ffd4d4;
+  margin-top: 12px;
+}
+
+.success-msg {
+  color: #d8ffe8;
+  margin-top: 12px;
+}
+
+@media (max-width: 1100px) {
+  .groups-shell {
+    width: calc(100vw - 32px);
+    margin-left: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .groups-sidebar {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .create-box {
+    flex-direction: column;
+  }
+}
