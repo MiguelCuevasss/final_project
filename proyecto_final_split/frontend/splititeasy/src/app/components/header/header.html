@@ -32,32 +32,43 @@
   </div>
 </header>
 
-<section class="chat-section">
-  <div class="chat-container">
-    <h2>Asistente de SplitItEasy</h2>
-    <p class="chat-subtitle">Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+<section class="chatbot-section">
+  <div class="chatbot-container">
+    <div class="chatbot-card">
 
-    <div class="chat-messages" *ngIf="aiResponse">
-      <div class="ai-message">
+      <div class="chat-header">
+  <img src="coin.png" alt="AI coin" class="chat-avatar" />
+  
+  <div class="chat-title">
+    <h2>Asistente de SplitItEasy</h2>
+  </div>
+</div>
+
+      <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+
+      <div class="chat-response" *ngIf="aiResponse">
         <strong>SplitItEasy AI:</strong>
         <p>{{ aiResponse }}</p>
       </div>
-    </div>
 
-    <div class="chat-input-area">
-      <input
-        type="text"
-        [(ngModel)]="userMessage"
-        placeholder="Escribe tu pregunta aquí..."
-        class="chat-input"
-        (keyup.enter)="sendMessage()" />
+      <div class="chat-input-row">
+        <input
+          type="text"
+          [(ngModel)]="userMessage"
+          name="userMessage"
+          placeholder="Escribe tu pregunta aquí..."
+          class="chat-input"
+          (keyup.enter)="sendMessage()"
+        />
 
-      <button
-        type="button"
-        class="chat-button"
-        (click)="sendMessage()">
-        Enviar
-      </button>
+        <button
+          type="button"
+          class="chat-btn"
+          (click)="sendMessage()">
+          Enviar
+        </button>
+      </div>
+
     </div>
   </div>
 </section>
