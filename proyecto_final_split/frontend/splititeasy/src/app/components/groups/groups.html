@@ -1,5 +1,7 @@
 <section class="groups-section">
   <div class="groups-shell">
+
+    <!-- IZQUIERDA -->
     <aside class="groups-sidebar">
       <div class="sidebar-top">
         <span class="badge">
@@ -39,45 +41,40 @@
         </a>
       </div>
     </aside>
-  </div>
-  <section class="chatbot-section">
-  <div class="chatbot-container">
-    <div class="chatbot-card">
 
-      <div class="chat-header">
-  <img src="coin.png" alt="AI coin" class="chat-avatar" />
-  
-    <div class="chat-title">
-    <h2>Asistente de SplitItEasy</h2>
-    </div>
-  </div>
+    <!-- DERECHA (CHAT) -->
+    <div class="chatbot-section">
+      <div class="chatbot-container">
+        <div class="chatbot-card">
 
-      <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+          <div class="chat-header">
+            <img src="coin.png" alt="AI coin" class="chat-avatar" />
+            <div class="chat-title">
+              <h2>Asistente de SplitItEasy</h2>
+            </div>
+          </div>
 
-      <div class="chat-response" *ngIf="aiResponse">
-        <strong>SplitItEasy AI:</strong>
-        <p>{{ aiResponse }}</p>
+          <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+
+          <div class="chat-response" *ngIf="aiResponse">
+            <strong>SplitItEasy AI:</strong>
+            <p>{{ aiResponse }}</p>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              [(ngModel)]="userMessage"
+              placeholder="Escribe tu pregunta..."
+              (keyup.enter)="sendMessage()"
+            />
+
+            <button (click)="sendMessage()">Enviar</button>
+          </div>
+
+        </div>
       </div>
-
-      <div class="chat-input-row">
-        <input
-          type="text"
-          [(ngModel)]="userMessage"
-          name="userMessage"
-          placeholder="Escribe tu pregunta aquí..."
-          class="chat-input"
-          (keyup.enter)="sendMessage()"
-        />
-
-        <button
-          type="button"
-          class="chat-btn"
-          (click)="sendMessage()">
-          Enviar
-        </button>
-      </div>
-
     </div>
+
   </div>
-  
 </section>
