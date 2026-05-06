@@ -1,7 +1,6 @@
 <section class="groups-section">
   <div class="groups-shell">
 
-    <!-- IZQUIERDA (SIDEBAR) -->
     <aside class="groups-sidebar">
       <div class="sidebar-top">
         <span class="badge">
@@ -16,8 +15,9 @@
             type="text"
             placeholder="Nombre del grupo"
             [(ngModel)]="newGroupName"
+            name="newGroupName"
           >
-          <button (click)="createGroup()">Crear</button>
+          <button type="button" (click)="createGroup()">Crear</button>
         </div>
       </div>
 
@@ -42,16 +42,12 @@
       </div>
     </aside>
 
-    <!-- DERECHA (CHAT) -->
     <div class="chatbot-section">
       <div class="chatbot-container">
         <div class="chatbot-card">
-
           <div class="chat-header">
-            <img src="coin.png" alt="AI coin" class="chat-avatar" />
-            <div class="chat-title">
-              <h2>Asistente de SplitItEasy</h2>
-            </div>
+            <img src="/coin.png" alt="AI coin" class="chat-avatar" />
+            <h2>Asistente de SplitItEasy</h2>
           </div>
 
           <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
@@ -64,14 +60,17 @@
           <div class="chat-input-row">
             <input
               type="text"
+              class="chat-input"
               [(ngModel)]="userMessage"
+              name="userMessage"
               placeholder="Escribe tu pregunta..."
               (keyup.enter)="sendMessage()"
             />
 
-            <button (click)="sendMessage()">Enviar</button>
+            <button type="button" class="chat-btn" (click)="sendMessage()">
+              Enviar
+            </button>
           </div>
-
         </div>
       </div>
     </div>
