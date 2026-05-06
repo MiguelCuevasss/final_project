@@ -1,28 +1,30 @@
 import { Component } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+
 import { GreetingPipe } from '../../pipes/greeting-pipe';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, GreetingPipe, DatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, GreetingPipe, DatePipe],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class HeaderComponent {
-  isMenuOpen = false;
 
-  
+  isMenuOpen = false;
+  today = new Date();
+
+  // 🔹 ABRIR Menu
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    console.log('Menú abierto:', this.isMenuOpen);
   }
 
+  // 🔹 CERRAR MENÚ
   closeMenu(): void {
     this.isMenuOpen = false;
   }
-
-  today = new Date();
 
 }

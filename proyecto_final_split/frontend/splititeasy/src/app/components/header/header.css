@@ -22,12 +22,12 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 18px; 
+  gap: 18px;
   text-decoration: none;
 }
 
 .brand-logo {
-  width: 100px; 
+  width: 100px;
   height: auto;
   object-fit: contain;
 }
@@ -49,7 +49,7 @@
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .nav a:hover,
@@ -98,8 +98,22 @@
   font-size: 0.8rem;
 }
 
+@media (max-width: 900px) {
+  .chatbot-section {
+    width: 100%;
+    margin-left: 0;
+    padding: 24px 16px;
+    justify-content: center;
+  }
 
-/* Responsive */
+  .chatbot-container {
+    width: 100%;
+  }
+
+  .chat-input-row {
+    flex-direction: column;
+  }
+}
 
 @media (max-width: 768px) {
   .header-info {
