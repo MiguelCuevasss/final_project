@@ -159,4 +159,29 @@
     text-align: center;
     border-bottom: none !important;
   }
+} 
+
+.profile-cta {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  background: rgba(56, 211, 159, 0.12);
+  border: 1px solid rgba(56, 211, 159, 0.35);
+  text-decoration: none;
+  transition: 0.25s;
+}
+
+.profile-cta:hover {
+  transform: translateY(-2px);
+  background: rgba(56, 211, 159, 0.18);
+}
+
+.profile-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
 }

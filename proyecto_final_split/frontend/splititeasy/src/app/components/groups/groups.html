@@ -1,0 +1,80 @@
+<section class="groups-section">
+  <div class="groups-shell">
+
+    <!-- IZQUIERDA (SIDEBAR) -->
+    <aside class="groups-sidebar">
+      <div class="sidebar-top">
+        <span class="badge">
+          <span class="dot"></span>
+          Grupos
+        </span>
+
+        <h2>Crear grupo</h2>
+
+        <div class="create-box">
+          <input
+            type="text"
+            placeholder="Nombre del grupo"
+            [(ngModel)]="newGroupName"
+          >
+          <button (click)="createGroup()">Crear</button>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+      <div class="sidebar-list">
+        <a
+          class="group-item"
+          *ngFor="let group of groups"
+          [routerLink]="['/groups', group.id]"
+        >
+          <div class="group-avatar">
+            {{ group.name.charAt(0) | uppercase }}
+          </div>
+
+          <div class="group-meta">
+            <h3>{{ group.name }}</h3>
+            <p>{{ group.members.length }} miembros</p>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- DERECHA (CHAT) -->
+    <div class="chatbot-section">
+      <div class="chatbot-container">
+        <div class="chatbot-card">
+
+          <div class="chat-header">
+            <img src="coin.png" alt="AI coin" class="chat-avatar" />
+            <div class="chat-title">
+              <h2>Asistente de SplitItEasy</h2>
+            </div>
+          </div>
+
+          <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+
+          <div class="chat-response" *ngIf="aiResponse">
+            <strong>SplitItEasy AI:</strong>
+            <p>{{ aiResponse }}</p>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              [(ngModel)]="userMessage"
+              placeholder="Escribe tu pregunta..."
+              (keyup.enter)="sendMessage()"
+            />
+
+            <button (click)="sendMessage()">Enviar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

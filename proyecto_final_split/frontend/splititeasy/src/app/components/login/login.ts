@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -8,12 +9,9 @@ import { AuthService } from '../../services/auth';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, RouterModule]
 })
 export class LoginComponent {
-
-  constructor(private authService: AuthService) {}
-
   isLogin = true;
 
   errorMessage: string = '';
@@ -22,10 +20,24 @@ export class LoginComponent {
   formData = {
     name: '',
     lastname: '',
+    username: '',
     email: '',
+    identifier: '',
     password: '',
     confirmPassword: ''
   };
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.route.url.subscribe(segments => {
+      this.isLogin = segments[0]?.path !== 'registro';
+      this.errorMessage = '';
+      this.successMessage = '';
+    });
+  }
 
   passwordsDoNotMatch(): boolean {
     return (
@@ -36,9 +48,7 @@ export class LoginComponent {
   }
 
   toggleMode() {
-    this.isLogin = !this.isLogin;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.router.navigate([this.isLogin ? '/registro' : '/login']);
   }
 
   submitForm(event: Event) {
@@ -48,9 +58,19 @@ export class LoginComponent {
     this.successMessage = '';
 
     if (!this.isLogin) {
-
-      if (!this.formData.name || !this.formData.lastname) {
+      if (!this.formData.name.trim() || !this.formData.lastname.trim()) {
         this.errorMessage = 'Completa nombre y apellido';
+        return;
+      }
+
+      if (!this.formData.username.trim()) {
+        this.errorMessage = 'Escribe un nombre de usuario';
+        return;
+      }
+
+      const email = this.formData.email.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        this.errorMessage = 'Escribe un correo válido';
         return;
       }
 
@@ -59,7 +79,13 @@ export class LoginComponent {
         return;
       }
 
-      const result = this.authService.register(this.formData);
+      const result = this.authService.register({
+        name: this.formData.name,
+        lastname: this.formData.lastname,
+        username: this.formData.username,
+        email: this.formData.email,
+        password: this.formData.password
+      });
 
       if (!result.success) {
         this.errorMessage = result.message;
@@ -67,20 +93,26 @@ export class LoginComponent {
       }
 
       this.successMessage = result.message;
-
-    } else {
-
-      const result = this.authService.login(
-        this.formData.email,
-        this.formData.password
-      );
-
-      if (!result.success) {
-        this.errorMessage = result.message;
-        return;
-      }
-
-      this.successMessage = result.message;
+      this.router.navigate(['/login']);
+      return;
     }
+
+    if (!this.formData.identifier.trim()) {
+      this.errorMessage = 'Escribe tu usuario o correo';
+      return;
+    }
+
+    const result = this.authService.login(
+      this.formData.identifier,
+      this.formData.password
+    );
+
+    if (!result.success) {
+      this.errorMessage = result.message;
+      return;
+    }
+
+    this.successMessage = result.message;
+    this.router.navigate(['/groups']);
   }
 }
