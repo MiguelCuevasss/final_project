@@ -1,8 +1,6 @@
 <section class="auth-section">
   <div class="auth-container">
-
     <div class="auth-box">
-
       <span class="badge">
         <span class="dot"></span>
         Bienvenido a SplitItEasy
@@ -13,8 +11,8 @@
       </h2>
 
       <p class="subtitle">
-        {{ isLogin 
-          ? 'Inicia sesión para continuar' 
+        {{ isLogin
+          ? 'Inicia sesión para continuar'
           : 'Empieza a gestionar tus gastos fácilmente' }}
       </p>
 
@@ -22,35 +20,68 @@
 
         <div *ngIf="!isLogin" class="row">
           <div class="input-group">
-            <input type="text" placeholder="Nombre"
-              [(ngModel)]="formData.name" name="name" required>
+            <input
+              type="text"
+              placeholder="Nombre"
+              [(ngModel)]="formData.name"
+              name="name"
+              required>
           </div>
 
           <div class="input-group">
-            <input type="text" placeholder="Apellido"
-              [(ngModel)]="formData.lastname" name="lastname" required>
+            <input
+              type="text"
+              placeholder="Apellido"
+              [(ngModel)]="formData.lastname"
+              name="lastname"
+              required>
           </div>
         </div>
 
-        <div class="input-group">
-          <input type="email" placeholder="Correo electrónico"
-            [(ngModel)]="formData.email" name="email" required>
+        <div class="input-group" *ngIf="!isLogin">
+          <input
+            type="text"
+            placeholder="Usuario"
+            [(ngModel)]="formData.username"
+            name="username"
+            required>
         </div>
 
-        <div class="input-group">
-          <input type="password" placeholder="Contraseña"
-            [(ngModel)]="formData.password" name="password" required>
+        <div class="input-group" *ngIf="isLogin">
+          <input
+            type="text"
+            placeholder="Usuario o correo electrónico"
+            [(ngModel)]="formData.identifier"
+            name="identifier"
+            required>
         </div>
 
         <div class="input-group" *ngIf="!isLogin">
-          <input 
-            type="password" 
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            [(ngModel)]="formData.email"
+            name="email"
+            required>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            [(ngModel)]="formData.password"
+            name="password"
+            required>
+        </div>
+
+        <div class="input-group" *ngIf="!isLogin">
+          <input
+            type="password"
             placeholder="Confirmar contraseña"
-            [(ngModel)]="formData.confirmPassword" 
-            name="confirmPassword" 
+            [(ngModel)]="formData.confirmPassword"
+            name="confirmPassword"
             required
-            [class.input-error]="passwordsDoNotMatch()"
-          >
+            [class.input-error]="passwordsDoNotMatch()">
 
           <p *ngIf="passwordsDoNotMatch()" class="field-error">
             Las contraseñas no coinciden
@@ -65,13 +96,11 @@
           {{ successMessage }}
         </div>
 
-        <button 
+        <button
           class="auth-btn"
-          [disabled]="!isLogin && passwordsDoNotMatch()"
-        >
+          [disabled]="!isLogin && passwordsDoNotMatch()">
           {{ isLogin ? 'Iniciar sesión' : 'Crear cuenta' }}
         </button>
-
       </form>
 
       <p class="switch">
@@ -80,8 +109,6 @@
           {{ isLogin ? 'Regístrate' : 'Inicia sesión' }}
         </span>
       </p>
-
     </div>
-
   </div>
 </section>
