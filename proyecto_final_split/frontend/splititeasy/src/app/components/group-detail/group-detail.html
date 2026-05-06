@@ -1,0 +1,86 @@
+<section class="group-detail-section" *ngIf="group; else noGroup">
+  <div class="group-detail-shell">
+    <div class="detail-header">
+      <div class="title-block">
+        <div class="avatar">
+          {{ group.name.charAt(0) | uppercase }}
+        </div>
+
+        <div>
+          <h2>{{ group.name }}</h2>
+          <p>{{ group.members.length }} miembros</p>
+        </div>
+      </div>
+
+      <a routerLink="/groups" class="back-link">Volver</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+    <div class="layout">
+      <div class="chat-panel">
+        <div class="messages">
+          <div
+            class="message-row"
+            *ngFor="let message of group.messages"
+            [class.mine]="message.author === currentUserName"
+          >
+            <div class="bubble">
+              <span>{{ message.author }}</span>
+              <p>{{ message.text }}</p>
+              <small>{{ message.date | date:'shortTime' }}</small>
+            </div>
+          </div>
+
+          <div *ngIf="group.messages.length === 0" class="empty-chat">
+            Aún no hay mensajes
+          </div>
+        </div>
+
+        <div class="composer">
+          <input
+            type="text"
+            placeholder="Escribe un mensaje"
+            [(ngModel)]="newMessage"
+          >
+          <button (click)="sendMessage()">Enviar</button>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="box">
+          <h3>Añadir miembro</h3>
+          <div class="row">
+            <input
+              type="text"
+              placeholder="Nombre del miembro"
+              [(ngModel)]="newMemberName"
+            >
+            <button (click)="addMember()">Añadir</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Miembros</h3>
+          <div class="members">
+            <span class="pill" *ngFor="let member of group.members">
+              {{ member }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #noGroup>
+  <section class="group-detail-section">
+    <div class="group-detail-shell">
+      <div class="empty-view">
+        <h2>No se encontró el grupo</h2>
+        <a routerLink="/groups">Volver</a>
+      </div>
+    </div>
+  </section>
+</ng-template>

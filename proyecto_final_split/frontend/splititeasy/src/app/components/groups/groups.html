@@ -1,0 +1,105 @@
+<section class="groups-section">
+  <div class="groups-shell">
+
+    <aside class="groups-sidebar">
+      <div class="sidebar-top">
+        <span class="badge">
+          <span class="dot"></span>
+          Grupos
+        </span>
+
+        <h2>Crear grupo</h2>
+
+        <div class="create-box">
+          <input
+            type="text"
+            placeholder="Nombre del grupo"
+            [(ngModel)]="newGroupName"
+            name="newGroupName"
+          >
+          <button type="button" (click)="createGroup()">Crear</button>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+      <div class="sidebar-list">
+        <a
+          class="group-item"
+          *ngFor="let group of groups"
+          [routerLink]="['/groups', group.id]"
+        >
+          <div class="group-avatar">
+            {{ group.name.charAt(0) | uppercase }}
+          </div>
+
+          <div class="group-meta">
+            <h3>{{ group.name }}</h3>
+            <p>{{ group.members.length }} miembros</p>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <div class="chatbot-section">
+      <div class="chatbot-container">
+        <div class="chatbot-card">
+          <div class="chat-header">
+            <img src="/coin.png" alt="AI coin" class="chat-avatar" />
+            <h2>Asistente de SplitItEasy</h2>
+          </div>
+
+          <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+
+          <div class="chat-response" *ngIf="aiResponse">
+            <strong>SplitItEasy AI:</strong>
+            <p>{{ aiResponse }}</p>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              class="chat-input"
+              [(ngModel)]="userMessage"
+              name="userMessage"
+              placeholder="Escribe tu pregunta..."
+              (keyup.enter)="sendMessage()"
+            />
+
+            <button type="button" class="chat-btn" (click)="sendMessage()">
+              Enviar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggestions-card">
+          <div class="suggestions-header">
+            <div>
+              <span class="suggestions-badge">Sugerencias</span>
+              <h3>Agrega amigos a tus grupos</h3>
+              <p>Personas que podrías sumar para dividir gastos más rápido.</p>
+            </div>
+
+            <button class="view-all-btn" type="button">Ver todo</button>
+          </div>
+
+          <div class="suggestions-list">
+            <article class="suggestion-item" *ngFor="let user of suggestedUsers">
+              <img [src]="user.avatar" [alt]="user.name" class="suggestion-avatar" />
+
+              <div class="suggestion-meta">
+                <h4>{{ user.name }}</h4>
+                <p>@{{ user.username }}</p>
+                <span>{{ user.mutualGroups }} grupos en común</span>
+              </div>
+
+              <button class="add-btn" type="button">Agregar</button>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
