@@ -1,0 +1,50 @@
+<section class="profile-section">
+  <div class="profile-shell">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 21a8 8 0 0 0-16 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="8" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </div>
+
+        <div>
+          <span class="badge">
+            <span class="dot"></span>
+            Editar perfil
+          </span>
+          <h2>Tu información</h2>
+          <p>Actualiza tu nombre, correo y descripción para que tus amigos te reconozcan mejor.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Nombre</label>
+          <input type="text" [(ngModel)]="profile.name" placeholder="Tu nombre">
+        </div>
+
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <input type="email" [(ngModel)]="profile.email" placeholder="tucorreo@gmail.com">
+        </div>
+
+        <div class="input-group full">
+          <label>Descripción</label>
+          <textarea
+            [(ngModel)]="profile.description"
+            placeholder="Escribe algo sobre ti para tus amigos"
+          ></textarea>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+      <div class="actions">
+        <button class="save-btn" (click)="saveProfile()">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</section>
