@@ -72,6 +72,32 @@
             </button>
           </div>
         </div>
+
+        <div class="suggestions-card">
+          <div class="suggestions-header">
+            <div>
+              <span class="suggestions-badge">Sugerencias</span>
+              <h3>Agrega amigos a tus grupos</h3>
+              <p>Personas que podrías sumar para dividir gastos más rápido.</p>
+            </div>
+
+            <button class="view-all-btn" type="button">Ver todo</button>
+          </div>
+
+          <div class="suggestions-list">
+            <article class="suggestion-item" *ngFor="let user of suggestedUsers">
+              <img [src]="user.avatar" [alt]="user.name" class="suggestion-avatar" />
+
+              <div class="suggestion-meta">
+                <h4>{{ user.name }}</h4>
+                <p>@{{ user.username }}</p>
+                <span>{{ user.mutualGroups }} grupos en común</span>
+              </div>
+
+              <button class="add-btn" type="button">Agregar</button>
+            </article>
+          </div>
+        </div>
       </div>
     </div>
 

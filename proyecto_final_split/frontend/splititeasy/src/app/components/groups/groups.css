@@ -163,9 +163,13 @@
 
 .chatbot-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.chatbot-card {
+.chatbot-card,
+.suggestions-card {
   background: linear-gradient(180deg, rgba(10, 26, 47, 0.92), rgba(5, 14, 28, 0.98));
   border: 1px solid rgba(56, 211, 159, 0.12);
   border-radius: 28px;
@@ -247,6 +251,129 @@
   box-shadow: 0 12px 24px rgba(46, 204, 113, 0.22);
 }
 
+.suggestions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.suggestions-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(56, 211, 159, 0.12);
+  color: #38d39f;
+  border: 1px solid rgba(56, 211, 159, 0.18);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.suggestions-header h3 {
+  color: #ffffff;
+  font-size: 24px;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.suggestions-header p {
+  color: #9aa4b2;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 640px;
+}
+
+.view-all-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid rgba(56, 211, 159, 0.22);
+  color: #38d39f;
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.view-all-btn:hover {
+  background: rgba(56, 211, 159, 0.08);
+}
+
+.suggestions-list {
+  display: grid;
+  gap: 14px;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(6, 18, 35, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.suggestion-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 211, 159, 0.22);
+  background: rgba(6, 18, 35, 0.9);
+}
+
+.suggestion-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(56, 211, 159, 0.35);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.suggestion-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestion-meta h4 {
+  color: #ffffff;
+  font-size: 17px;
+  margin: 0 0 4px;
+}
+
+.suggestion-meta p {
+  color: #9aa4b2;
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.suggestion-meta span {
+  color: #6ee7b7;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.add-btn {
+  background: linear-gradient(135deg, #1f8f6a, #2ecc71);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  flex-shrink: 0;
+}
+
+.add-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
 @media (max-width: 1100px) {
   .groups-shell {
     grid-template-columns: 1fr;
@@ -259,12 +386,20 @@
   }
 
   .chat-input-row,
-  .create-box {
+  .create-box,
+  .suggestions-header {
     flex-direction: column;
   }
 
   .chat-btn,
-  .create-box button {
+  .create-box button,
+  .view-all-btn,
+  .add-btn {
     width: 100%;
+  }
+
+  .suggestion-item {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

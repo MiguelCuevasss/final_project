@@ -15,22 +15,53 @@ import { ChatService } from '../../services/chat';
   imports: [CommonModule, FormsModule, RouterModule]
 })
 export class GroupsComponent {
-
   groups: Group[] = [];
   newGroupName = '';
   errorMessage = '';
   successMessage = '';
   currentUserName = 'Usuario';
 
-  // Chat 
-  userMessage: string = '';
-  aiResponse: string = '';
-  loading: boolean = false;
+  suggestedUsers = [
+    {
+      name: 'Miguel Cuevas',
+      username: 'cuevasss_',
+      mutualGroups: 4,
+      avatar: '/cuevasss_.png'
+    },
+    {
+      name: 'Jimena Estrada',
+      username: 'jimenaestradad',
+      mutualGroups: 6,
+      avatar: '/jimenaestradad.png'
+    },
+    {
+      name: 'Valeria Pérez',
+      username: 'vale.perez',
+      mutualGroups: 3,
+      avatar: 'https://i.pravatar.cc/150?img=20'
+    },
+    {
+      name: 'Diego López',
+      username: 'diegolopez',
+      mutualGroups: 2,
+      avatar: 'https://i.pravatar.cc/150?img=12'
+    },
+    {
+      name: 'Camila Torres',
+      username: 'cami.torres',
+      mutualGroups: 5,
+      avatar: 'https://i.pravatar.cc/150?img=47'
+    }
+  ];
+
+  userMessage = '';
+  aiResponse = '';
+  loading = false;
 
   constructor(
     private groupsService: GroupsService,
     private authService: AuthService,
-    private chatService: ChatService // 👈 IMPORTANTE
+    private chatService: ChatService
   ) {
     const currentUser = this.authService.getCurrentUser();
     this.currentUserName = currentUser?.name || 'Usuario';
@@ -58,7 +89,6 @@ export class GroupsComponent {
     this.loadGroups();
   }
 
-  // CHAT
   sendMessage(): void {
     if (!this.userMessage.trim()) return;
 
