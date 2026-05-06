@@ -20,22 +20,19 @@
       <a routerLink="/login" (click)="closeMenu()">Login</a>
 
       <a
-        routerLink="/login"
-        [queryParams]="{ mode: 'register' }"
+        routerLink="/registro"
         class="nav-cta"
         (click)="closeMenu()">
         Empieza gratis
       </a>
 
       <a
-  routerLink="/perfil"
-  class="profile-cta"
-  aria-label="Editar perfil"
-  (click)="closeMenu()">
-  
-  <img src="/profile.png" class="profile-img" />
-
-</a>
+        routerLink="/perfil"
+        class="profile-cta"
+        aria-label="Editar perfil"
+        (click)="closeMenu()">
+        <img src="/profile.png" class="profile-img" />
+      </a>
     </nav>
 
     <div class="header-info">

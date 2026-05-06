@@ -15,20 +15,41 @@ export class AuthService {
     this.currentUser = currentUserData ? JSON.parse(currentUserData) : null;
   }
 
+  private isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+
   register(user: any) {
     const email = user.email.trim().toLowerCase();
-    const exists = this.users.find(u => u.email === email);
+    const username = user.username.trim().toLowerCase();
 
-    if (exists) {
+    if (!this.isValidEmail(email)) {
+      return {
+        success: false,
+        message: 'Escribe un correo válido'
+      };
+    }
+
+    const emailExists = this.users.find(u => u.email === email);
+    if (emailExists) {
       return {
         success: false,
         message: 'Este correo ya está registrado'
       };
     }
 
+    const usernameExists = this.users.find(u => u.username === username);
+    if (usernameExists) {
+      return {
+        success: false,
+        message: 'Este usuario ya existe'
+      };
+    }
+
     const newUser = {
       name: user.name.trim(),
       lastname: user.lastname.trim(),
+      username,
       email,
       password: user.password
     };
@@ -42,11 +63,14 @@ export class AuthService {
     };
   }
 
-  login(email: string, password: string) {
-    const normalizedEmail = email.trim().toLowerCase();
+  login(identifier: string, password: string) {
+    const normalizedIdentifier = identifier.trim().toLowerCase();
 
     const user = this.users.find(
-      u => u.email === normalizedEmail && u.password === password
+      u =>
+        (u.email?.toLowerCase() === normalizedIdentifier ||
+          u.username?.toLowerCase() === normalizedIdentifier) &&
+        u.password === password
     );
 
     if (!user) {
@@ -59,6 +83,7 @@ export class AuthService {
     this.currentUser = {
       name: user.name,
       lastname: user.lastname,
+      username: user.username,
       email: user.email
     };
 
