@@ -58,10 +58,7 @@ router.post('/login', async (req, res) => {
 
   try {
 
-    const {
-      identifier,
-      password
-    } = req.body;
+    const { identifier, password } = req.body;
 
     const user = await User.findOne({
       $or: [
@@ -70,29 +67,39 @@ router.post('/login', async (req, res) => {
       ]
     });
 
-    if (!user || user.password !== password) {
-
+    if (!user) {
       return res.status(400).json({
-        success: false,
-        message: 'Credenciales incorrectas'
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    if (user.password !== password) {
+      return res.status(400).json({
+        message: 'Contraseña incorrecta'
       });
     }
 
     res.json({
-      success: true,
       message: 'Login exitoso',
-      user
+      user: {
+        id: user._id,
+        name: user.name,
+        lastname: user.lastname,
+        username: user.username,
+        email: user.email
+      }
     });
 
   } catch (error) {
 
-    console.log(error);
+    console.error(error);
 
     res.status(500).json({
-      success: false,
       message: 'Error del servidor'
     });
+
   }
+
 });
 
 module.exports = router;
