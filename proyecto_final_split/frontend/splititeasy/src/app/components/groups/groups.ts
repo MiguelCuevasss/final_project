@@ -32,6 +32,9 @@ export class GroupsComponent {
 
   loading = false;
 
+  editingMessageId: string | null = null;
+  editedMessage = '';
+
   suggestedUsers = [
     {
       name: 'Miguel Cuevas',
@@ -81,9 +84,7 @@ export class GroupsComponent {
 
   }
 
-  // =========================
   // CARGAR GRUPOS
-  // =========================
 
   loadGroups() {
 
@@ -91,9 +92,8 @@ export class GroupsComponent {
 
   }
 
-  // =========================
   // CARGAR HISTORIAL CHAT
-  // =========================
+
 
   loadMessages() {
 
@@ -115,9 +115,8 @@ export class GroupsComponent {
 
   }
 
-  // =========================
+
   // CREAR GRUPO
-  // =========================
 
   createGroup() {
 
@@ -145,9 +144,7 @@ export class GroupsComponent {
 
   }
 
-  // =========================
   // ENVIAR MENSAJE
-  // =========================
 
   sendMessage(): void {
 
@@ -178,5 +175,44 @@ export class GroupsComponent {
     });
 
   }
+
+startEditing(message: ChatMessage): void {
+  this.editingMessageId = message._id || null;
+  this.editedMessage = message.userMessage;
+}
+
+cancelEditing(): void {
+  this.editingMessageId = null;
+  this.editedMessage = '';
+}
+
+saveEdit(message: ChatMessage): void {
+
+  if (!message._id) return;
+
+  this.chatService.updateMessage(
+    message._id,
+    this.editedMessage
+  ).subscribe({
+
+    next: (updatedMessage) => {
+
+      const index = this.messages.findIndex(
+        m => m._id === updatedMessage._id
+      );
+
+      if (index !== -1) {
+        this.messages[index] = updatedMessage;
+      }
+
+      this.cancelEditing();
+    },
+
+    error: (error) => {
+      console.error(error);
+    }
+  });
+}  
+
 
 }

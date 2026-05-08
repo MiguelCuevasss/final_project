@@ -442,3 +442,44 @@
 .ai-bubble p {
   margin: 6px 0 0;
 }
+
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.edit-btn {
+  background: #3498db;
+}
+
+.save-btn {
+  background: #2ecc71;
+}
+
+.cancel-btn {
+  background: #e74c3c;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: #0a1a2f;
+  color: white;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
