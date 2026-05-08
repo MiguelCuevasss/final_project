@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const Message = require('../models/Message');
+const multer = require('multer');
+const upload = multer();
 
 // GET historial
 router.get('/', async (req, res) => {
@@ -17,13 +19,20 @@ router.get('/', async (req, res) => {
 });
 
 // POST mensaje
-router.post('/', async (req, res) => {
+router.post(
+  '/',
+  upload.single('image'),
+  async (req, res) => {
 
   console.log('Mensaje recibido:', req.body);
 
   try {
 
     const { message } = req.body;
+
+    const imageBase64 = req.file
+    ? req.file.buffer.toString('base64')
+    : null;
 
     if (!message) {
       return res.status(400).json({
@@ -37,10 +46,41 @@ router.post('/', async (req, res) => {
         model: 'openai/gpt-4o-mini',
         messages: [
           {
-            role: 'user',
-            content: message
-          }
-        ]
+            role: 'system',
+          content: `
+            Eres SplitItEasy AI.
+
+            Ayudas a dividir gastos,
+            analizar facturas y administrar grupos.
+
+            Si recibes una imagen:
+            - analiza la factura
+            - identifica precios
+            - ayuda a dividir gastos
+            - responde claramente
+
+            Responde siempre en español.
+          `
+        },
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: message || 'Analiza esta imagen'
+            },
+
+            ...(imageBase64
+              ? [{
+                  type: 'image_url',
+                  image_url: {
+                    url: `data:image/jpeg;base64,${imageBase64}`
+                  }
+                }]
+              : [])
+          ]
+        }
+      ]
       },
       {
         headers: {

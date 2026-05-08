@@ -14,13 +14,11 @@ import { ChatService, ChatMessage } from '../../services/chat';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
-
 export class GroupsComponent {
 
+  // GROUPS
+
   groups: Group[] = [];
-
-  messages: ChatMessage[] = [];
-
   newGroupName = '';
 
   errorMessage = '';
@@ -28,12 +26,24 @@ export class GroupsComponent {
 
   currentUserName = 'Usuario';
 
-  userMessage = '';
 
+  // CHAT
+
+
+  userMessage = '';
   loading = false;
+
+  messages: ChatMessage[] = [];
 
   editingMessageId: string | null = null;
   editedMessage = '';
+
+  // IMAGEN
+  selectedImage: File | null = null;
+
+
+  // SUGGESTED USERS
+
 
   suggestedUsers = [
     {
@@ -68,6 +78,10 @@ export class GroupsComponent {
     }
   ];
 
+
+  // CONSTRUCTOR
+
+
   constructor(
     private groupsService: GroupsService,
     private authService: AuthService,
@@ -79,80 +93,102 @@ export class GroupsComponent {
     this.currentUserName = currentUser?.name || 'Usuario';
 
     this.loadGroups();
-
     this.loadMessages();
-
   }
 
-  // CARGAR GRUPOS
 
-  loadGroups() {
+  // GROUPS
 
+
+  loadGroups(): void {
     this.groups = [...this.groupsService.getGroups()];
-
   }
 
-  // CARGAR HISTORIAL CHAT
-
-
-  loadMessages() {
-
-    this.chatService.getMessages().subscribe({
-
-      next: (data) => {
-
-        this.messages = data;
-
-      },
-
-      error: (error) => {
-
-        console.error(error);
-
-      }
-
-    });
-
-  }
-
-
-  // CREAR GRUPO
-
-  createGroup() {
+  createGroup(): void {
 
     this.errorMessage = '';
-
     this.successMessage = '';
 
     const name = this.newGroupName.trim();
 
     if (!name) {
-
       this.errorMessage = 'Escribe un nombre para el grupo';
-
       return;
-
     }
 
-    this.groupsService.createGroup(name, this.currentUserName);
+    this.groupsService.createGroup(
+      name,
+      this.currentUserName
+    );
 
     this.newGroupName = '';
 
     this.successMessage = 'Grupo creado correctamente';
 
     this.loadGroups();
-
   }
+
+
+  // CHAT
+
+
+  loadMessages(): void {
+
+    this.chatService.getMessages().subscribe({
+
+      next: (messages) => {
+        this.messages = messages;
+      },
+
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+
+  // IMAGEN
+
+
+  onImageSelected(event: any): void {
+
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedImage = file;
+    }
+  }
+
 
   // ENVIAR MENSAJE
 
+
   sendMessage(): void {
 
-    if (!this.userMessage.trim()) return;
+    if (!this.userMessage.trim() && !this.selectedImage) {
+      return;
+    }
 
     this.loading = true;
 
-    this.chatService.sendMessage(this.userMessage).subscribe({
+    // FORM DATA
+    const formData = new FormData();
+
+    formData.append(
+      'message',
+      this.userMessage
+    );
+
+    // SI HAY IMAGEN
+    if (this.selectedImage) {
+
+      formData.append(
+        'image',
+        this.selectedImage
+      );
+    }
+
+    this.chatService.sendMessage(formData).subscribe({
 
       next: (response) => {
 
@@ -160,8 +196,10 @@ export class GroupsComponent {
 
         this.userMessage = '';
 
-        this.loading = false;
+        // LIMPIAR IMAGEN
+        this.selectedImage = null;
 
+        this.loading = false;
       },
 
       error: (error) => {
@@ -169,50 +207,54 @@ export class GroupsComponent {
         console.error(error);
 
         this.loading = false;
-
       }
-
     });
-
   }
 
-startEditing(message: ChatMessage): void {
-  this.editingMessageId = message._id || null;
-  this.editedMessage = message.userMessage;
-}
 
-cancelEditing(): void {
-  this.editingMessageId = null;
-  this.editedMessage = '';
-}
+  // EDITAR MENSAJES
 
-saveEdit(message: ChatMessage): void {
 
-  if (!message._id) return;
+  startEditing(message: ChatMessage): void {
 
-  this.chatService.updateMessage(
-    message._id,
-    this.editedMessage
-  ).subscribe({
+    this.editingMessageId = message._id || null;
 
-    next: (updatedMessage) => {
+    this.editedMessage = message.userMessage;
+  }
 
-      const index = this.messages.findIndex(
-        m => m._id === updatedMessage._id
-      );
+  cancelEditing(): void {
 
-      if (index !== -1) {
-        this.messages[index] = updatedMessage;
+    this.editingMessageId = null;
+
+    this.editedMessage = '';
+  }
+
+  saveEdit(message: ChatMessage): void {
+
+    if (!message._id) return;
+
+    this.chatService.updateMessage(
+      message._id,
+      this.editedMessage
+    ).subscribe({
+
+      next: (updatedMessage) => {
+
+        const index = this.messages.findIndex(
+          m => m._id === updatedMessage._id
+        );
+
+        if (index !== -1) {
+
+          this.messages[index] = updatedMessage;
+        }
+
+        this.cancelEditing();
+      },
+
+      error: (error) => {
+        console.error(error);
       }
-
-      this.cancelEditing();
-    },
-
-    error: (error) => {
-      console.error(error);
-    }
-  });
-}  
-
-
+    });
+  }
 }

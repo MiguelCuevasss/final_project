@@ -483,3 +483,17 @@
   gap: 10px;
   margin-top: 10px;
 }
+
+.image-upload {
+  margin-bottom: 16px;
+}
+
+.image-upload input {
+  color: white;
+}
+
+.selected-image {
+  color: #38d39f;
+  margin-top: 8px;
+  font-size: 14px;
+}

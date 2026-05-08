@@ -150,7 +150,24 @@
             </div>
 
           </div>
+          
 
+          <div class="image-upload">
+
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+          />
+
+          <p *ngIf="selectedImage" class="selected-image">
+            Imagen seleccionada:
+            {{ selectedImage.name }}
+          </p>
+
+        </div>
+
+    
           <!-- INPUT -->
           <div class="chat-input-row">
 
@@ -235,6 +252,12 @@
 
       </div>
     </section>
+
+    <input
+    type="file"
+    (change)="onImageSelected($event)"
+    accept="image/*"
+    />
 
   </div>
 </section>

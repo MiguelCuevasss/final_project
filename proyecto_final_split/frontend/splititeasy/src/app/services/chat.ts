@@ -24,10 +24,11 @@ export class ChatService {
   }
 
   // POST mensaje
-  sendMessage(message: string): Observable<ChatMessage> {
-    return this.http.post<ChatMessage>(this.apiUrl, {
-      message
-    });
+  sendMessage(data: FormData): Observable<ChatMessage> {
+  return this.http.post<ChatMessage>(
+    this.apiUrl,
+    data
+    );
   }
 
   // PATCH editar mensaje
