@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { GroupsService, Group } from '../../services/groups';
 import { AuthService } from '../../services/auth';
-import { ChatService } from '../../services/chat';
+import { ChatService, ChatMessage } from '../../services/chat';
 
 @Component({
   selector: 'app-groups',
@@ -14,12 +14,23 @@ import { ChatService } from '../../services/chat';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
+
 export class GroupsComponent {
+
   groups: Group[] = [];
+
+  messages: ChatMessage[] = [];
+
   newGroupName = '';
+
   errorMessage = '';
   successMessage = '';
+
   currentUserName = 'Usuario';
+
+  userMessage = '';
+
+  loading = false;
 
   suggestedUsers = [
     {
@@ -54,57 +65,118 @@ export class GroupsComponent {
     }
   ];
 
-  userMessage = '';
-  aiResponse = '';
-  loading = false;
-
   constructor(
     private groupsService: GroupsService,
     private authService: AuthService,
     private chatService: ChatService
   ) {
+
     const currentUser = this.authService.getCurrentUser();
+
     this.currentUserName = currentUser?.name || 'Usuario';
+
     this.loadGroups();
+
+    this.loadMessages();
+
   }
+
+  // =========================
+  // CARGAR GRUPOS
+  // =========================
 
   loadGroups() {
+
     this.groups = [...this.groupsService.getGroups()];
+
   }
 
+  // =========================
+  // CARGAR HISTORIAL CHAT
+  // =========================
+
+  loadMessages() {
+
+    this.chatService.getMessages().subscribe({
+
+      next: (data) => {
+
+        this.messages = data;
+
+      },
+
+      error: (error) => {
+
+        console.error(error);
+
+      }
+
+    });
+
+  }
+
+  // =========================
+  // CREAR GRUPO
+  // =========================
+
   createGroup() {
+
     this.errorMessage = '';
+
     this.successMessage = '';
 
     const name = this.newGroupName.trim();
 
     if (!name) {
+
       this.errorMessage = 'Escribe un nombre para el grupo';
+
       return;
+
     }
 
     this.groupsService.createGroup(name, this.currentUserName);
+
     this.newGroupName = '';
+
     this.successMessage = 'Grupo creado correctamente';
+
     this.loadGroups();
+
   }
 
+  // =========================
+  // ENVIAR MENSAJE
+  // =========================
+
   sendMessage(): void {
+
     if (!this.userMessage.trim()) return;
 
     this.loading = true;
 
     this.chatService.sendMessage(this.userMessage).subscribe({
+
       next: (response) => {
-        this.aiResponse = response.aiResponse;
+
+        this.messages.push(response);
+
         this.userMessage = '';
+
         this.loading = false;
+
       },
+
       error: (error) => {
+
         console.error(error);
-        this.aiResponse = 'Error al comunicarse con la IA';
+
         this.loading = false;
+
       }
+
     });
+
   }
+
 }
