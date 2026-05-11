@@ -14,7 +14,7 @@ export interface ChatMessage {
 })
 export class ChatService {
 
-  private apiUrl = 'http://localhost:3000/api/chat';
+  private apiUrl = 'https://splititeasy-backend.onrender.com/api/chat';
 
   constructor(private http: HttpClient) {}
 
