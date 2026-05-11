@@ -40,6 +40,7 @@
         <a
           class="group-item"
           *ngFor="let group of groups"
+          (click)="loadGroupMessages(group._id)"
           [routerLink]="['/groups', group.id]"
         >
           <div class="group-avatar">
@@ -76,6 +77,25 @@
           </div>
 
           <!-- HISTORIAL -->
+          <div
+            class="message-block"
+            *ngFor="let msg of groupMessages"
+          >
+
+            <div class="user-message">
+
+              <strong>
+                {{ msg.senderName }}
+              </strong>
+
+              <div class="message-bubble user-bubble">
+                {{ msg.text }}
+              </div>
+
+            </div>
+
+          </div>
+
           <div class="chat-history">
 
             <div
