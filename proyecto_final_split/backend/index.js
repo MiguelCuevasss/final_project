@@ -4,6 +4,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const connectDB = require('./config/db');
+
+connectDB();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +21,9 @@ message: 'API de Chat con IA funcionando correctamente'
 });
 
 const chatRoutes = require('./routes/chat.routes');
+const authRoutes = require('./routes/auth.routes');
 app.use('/api/chat', chatRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

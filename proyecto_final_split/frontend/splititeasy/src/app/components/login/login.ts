@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -51,68 +51,79 @@ export class LoginComponent {
     this.router.navigate([this.isLogin ? '/registro' : '/login']);
   }
 
-  submitForm(event: Event) {
-    event.preventDefault();
+submitForm(event: Event) {
+  event.preventDefault();
 
-    this.errorMessage = '';
-    this.successMessage = '';
+  this.errorMessage = '';
+  this.successMessage = '';
 
-    if (!this.isLogin) {
-      if (!this.formData.name.trim() || !this.formData.lastname.trim()) {
-        this.errorMessage = 'Completa nombre y apellido';
-        return;
+  // REGISTER
+
+  if (!this.isLogin) {
+
+    const userData = {
+      name: this.formData.name,
+      lastname: this.formData.lastname,
+      username: this.formData.username,
+      email: this.formData.email,
+      password: this.formData.password
+    };
+
+    this.authService.register(userData).subscribe({
+
+      next: (response) => {
+
+        this.successMessage = response.message;
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+
+      },
+
+      error: (error) => {
+
+        this.errorMessage =
+          error.error.message || 'Error al registrar usuario';
+
       }
 
-      if (!this.formData.username.trim()) {
-        this.errorMessage = 'Escribe un nombre de usuario';
-        return;
-      }
+    });
 
-      const email = this.formData.email.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        this.errorMessage = 'Escribe un correo válido';
-        return;
-      }
-
-      if (this.passwordsDoNotMatch()) {
-        this.errorMessage = 'Las contraseñas no coinciden';
-        return;
-      }
-
-      const result = this.authService.register({
-        name: this.formData.name,
-        lastname: this.formData.lastname,
-        username: this.formData.username,
-        email: this.formData.email,
-        password: this.formData.password
-      });
-
-      if (!result.success) {
-        this.errorMessage = result.message;
-        return;
-      }
-
-      this.successMessage = result.message;
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    if (!this.formData.identifier.trim()) {
-      this.errorMessage = 'Escribe tu usuario o correo';
-      return;
-    }
-
-    const result = this.authService.login(
-      this.formData.identifier,
-      this.formData.password
-    );
-
-    if (!result.success) {
-      this.errorMessage = result.message;
-      return;
-    }
-
-    this.successMessage = result.message;
-    this.router.navigate(['/groups']);
+    return;
   }
+
+  // LOGIN
+
+  const credentials = {
+    identifier: this.formData.identifier,
+    password: this.formData.password
+  };
+
+  this.authService.login(credentials).subscribe({
+
+    next: (response) => {
+
+      this.successMessage = response.message;
+
+      localStorage.setItem(
+        'currentUser',
+        JSON.stringify(response.user)
+      );
+
+      setTimeout(() => {
+        this.router.navigate(['/groups']);
+      }, 1000);
+
+    },
+
+    error: (error) => {
+
+      this.errorMessage =
+        error.error.message || 'Credenciales incorrectas';
+
+    }
+
+  });
+}
 }

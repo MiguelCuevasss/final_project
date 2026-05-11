@@ -1,6 +1,7 @@
 <section class="groups-section">
   <div class="groups-shell">
 
+    <!-- SIDEBAR -->
     <aside class="groups-sidebar">
       <div class="sidebar-top">
         <span class="badge">
@@ -17,12 +18,23 @@
             [(ngModel)]="newGroupName"
             name="newGroupName"
           >
-          <button type="button" (click)="createGroup()">Crear</button>
+
+          <button
+            type="button"
+            (click)="createGroup()"
+          >
+            Crear
+          </button>
         </div>
       </div>
 
-      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
-      <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="error-msg">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="success-msg">
+        {{ successMessage }}
+      </div>
 
       <div class="sidebar-list">
         <a
@@ -42,64 +54,210 @@
       </div>
     </aside>
 
-    <div class="chatbot-section">
+    <!-- CHAT -->
+    <section class="chatbot-section">
       <div class="chatbot-container">
+
         <div class="chatbot-card">
+
           <div class="chat-header">
-            <img src="/coin.png" alt="AI coin" class="chat-avatar" />
-            <h2>Asistente de SplitItEasy</h2>
+            <img
+              src="/coin.png"
+              alt="AI coin"
+              class="chat-avatar"
+            />
+
+            <div>
+              <h2>Asistente de SplitItEasy</h2>
+              <p class="chat-subtitle">
+                Pregúntame sobre presupuestos, gastos o grupos.
+              </p>
+            </div>
           </div>
 
-          <p>Pregúntame sobre presupuestos, gastos compartidos o cómo usar la plataforma.</p>
+          <!-- HISTORIAL -->
+          <div class="chat-history">
 
-          <div class="chat-response" *ngIf="aiResponse">
-            <strong>SplitItEasy AI:</strong>
-            <p>{{ aiResponse }}</p>
+            <div
+              class="message-block"
+              *ngFor="let msg of messages"
+            >
+
+              <!-- USER -->
+              <div class="user-message">
+                <div class="message-label">
+                  Tú
+                </div>
+
+                <div *ngIf="editingMessageId !== msg._id">
+
+                  <div class="message-bubble user-bubble">
+                    {{ msg.userMessage }}
+                  </div>
+
+                  <button
+                    class="edit-btn"
+                    type="button"
+                    (click)="startEditing(msg)"
+                  >
+                    Editar
+                  </button>
+
+                </div>
+
+                <div *ngIf="editingMessageId === msg._id">
+
+                  <input
+                    type="text"
+                    [(ngModel)]="editedMessage"
+                    class="edit-input"
+                  />
+
+                  <div class="edit-actions">
+
+                    <button
+                      class="save-btn"
+                      type="button"
+                      (click)="saveEdit(msg)"
+                    >
+                      Guardar
+                    </button>
+
+                    <button
+                      class="cancel-btn"
+                      type="button"
+                      (click)="cancelEditing()"
+                    >
+                      Cancelar
+                    </button>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- IA -->
+              <div class="ai-message">
+                <div class="message-label ai-label">
+                  SplitItEasy AI
+                </div>
+
+                <div class="message-bubble ai-bubble">
+                  {{ msg.aiResponse }}
+                </div>
+              </div>
+
+            </div>
+
           </div>
+          
 
+          <div class="image-upload">
+
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+          />
+
+          <p *ngIf="selectedImage" class="selected-image">
+            Imagen seleccionada:
+            {{ selectedImage.name }}
+          </p>
+
+        </div>
+
+    
+          <!-- INPUT -->
           <div class="chat-input-row">
+
             <input
               type="text"
-              class="chat-input"
               [(ngModel)]="userMessage"
               name="userMessage"
               placeholder="Escribe tu pregunta..."
+              class="chat-input"
               (keyup.enter)="sendMessage()"
             />
 
-            <button type="button" class="chat-btn" (click)="sendMessage()">
-              Enviar
+            <button
+              type="button"
+              class="chat-btn"
+              (click)="sendMessage()"
+              [disabled]="loading"
+            >
+              {{ loading ? 'Enviando...' : 'Enviar' }}
             </button>
+
           </div>
+
         </div>
 
+        <!-- SUGERENCIAS -->
         <div class="suggestions-card">
+
           <div class="suggestions-header">
             <div>
-              <span class="suggestions-badge">Sugerencias</span>
+              <span class="suggestions-badge">
+                Sugerencias
+              </span>
+
               <h3>Agrega amigos a tus grupos</h3>
-              <p>Personas que podrías sumar para dividir gastos más rápido.</p>
+
+              <p>
+                Personas que podrías sumar para dividir gastos.
+              </p>
             </div>
 
-            <button class="view-all-btn" type="button">Ver todo</button>
+            <button
+              class="view-all-btn"
+              type="button"
+            >
+              Ver todo
+            </button>
           </div>
 
           <div class="suggestions-list">
-            <article class="suggestion-item" *ngFor="let user of suggestedUsers">
-              <img [src]="user.avatar" [alt]="user.name" class="suggestion-avatar" />
+
+            <article
+              class="suggestion-item"
+              *ngFor="let user of suggestedUsers"
+            >
+
+              <img
+                [src]="user.avatar"
+                [alt]="user.name"
+                class="suggestion-avatar"
+              />
 
               <div class="suggestion-meta">
                 <h4>{{ user.name }}</h4>
                 <p>@{{ user.username }}</p>
-                <span>{{ user.mutualGroups }} grupos en común</span>
+                <span>
+                  {{ user.mutualGroups }} grupos en común
+                </span>
               </div>
 
-              <button class="add-btn" type="button">Agregar</button>
+              <button
+                class="add-btn"
+                type="button"
+              >
+                Agregar
+              </button>
+
             </article>
+
           </div>
         </div>
+
       </div>
-    </div>
+    </section>
+
+    <input
+    type="file"
+    (change)="onImageSelected($event)"
+    accept="image/*"
+    />
 
   </div>
 </section>

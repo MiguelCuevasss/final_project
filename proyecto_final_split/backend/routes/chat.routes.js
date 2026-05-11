@@ -1,27 +1,128 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const Message = require('../models/Message');
+const multer = require('multer');
+const upload = multer();
 
-let conversations = [];
+// GET historial
+router.get('/', async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: 1 });
 
-// GET - Obtener historial
-router.get('/', (req, res) => {
-  res.status(200).json(conversations);
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error obteniendo mensajes'
+    });
+  }
 });
 
-// POST - Enviar mensaje a la IA
-router.post('/', async (req, res) => {
+// POST mensaje
+router.post(
+  '/',
+  upload.single('image'),
+  async (req, res) => {
 
   console.log('Mensaje recibido:', req.body);
 
-  const { message } = req.body;
-
   try {
+
     const { message } = req.body;
+
+    const imageBase64 = req.file
+    ? req.file.buffer.toString('base64')
+    : null;
 
     if (!message) {
       return res.status(400).json({
         error: 'El mensaje es obligatorio'
+      });
+    }
+
+    const response = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: 'openai/gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+          content: `
+            Eres SplitItEasy AI.
+
+            Ayudas a dividir gastos,
+            analizar facturas y administrar grupos.
+
+            Si recibes una imagen:
+            - analiza la factura
+            - identifica precios
+            - ayuda a dividir gastos
+            - responde claramente
+
+            Responde siempre en español.
+          `
+        },
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: message || 'Analiza esta imagen'
+            },
+
+            ...(imageBase64
+              ? [{
+                  type: 'image_url',
+                  image_url: {
+                    url: `data:image/jpeg;base64,${imageBase64}`
+                  }
+                }]
+              : [])
+          ]
+        }
+      ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const aiResponse = response.data.choices[0].message.content;
+
+    const newMessage = new Message({
+      userMessage: message,
+      aiResponse
+    });
+
+    await newMessage.save();
+
+    res.status(201).json(newMessage);
+
+  } catch (error) {
+
+    console.error('OpenRouter Error:', error.response?.data || error.message);
+
+    res.status(500).json({
+      error: 'Error al comunicarse con la IA'
+    });
+  }
+});
+
+// PATCH editar mensaje
+router.patch('/:id', async (req, res) => {
+
+  try {
+
+    const { message } = req.body;
+
+    const conversation = await Message.findById(req.params.id);
+
+    if (!conversation) {
+      return res.status(404).json({
+        error: 'Conversación no encontrada'
       });
     }
 
@@ -44,70 +145,21 @@ router.post('/', async (req, res) => {
       }
     );
 
-    const aiResponse = response.data.choices[0].message.content;
-
-    const conversation = {
-      id: conversations.length + 1,
-      userMessage: message,
-      aiResponse,
-      createdAt: new Date()
-    };
-
-    conversations.push(conversation);
-
-    res.status(201).json(conversation);
-  } catch (error) {
-  console.error('OpenRouter Error:', error.response?.data || error.message);
-  res.status(500).json({
-    error: 'Error al comunicarse con la IA',
-    details: error.response?.data || error.message
-  });
-  }
-});
-
-// PATCH - Editar mensaje y regenerar respuesta
-router.patch('/:id', async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const { message } = req.body;
-
-    const conversation = conversations.find(c => c.id === id);
-
-    if (!conversation) {
-      return res.status(404).json({
-        error: 'Conversación no encontrada'
-      });
-    }
-
-    const response = await axios.post(
-      'https://openrouter.ai/api/v1/chat/completions',
-      {
-        model: 'mistralai/mistral-7b-instruct:free',
-        messages: [
-          {
-            role: 'user',
-            content: message
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
     conversation.userMessage = message;
     conversation.aiResponse = response.data.choices[0].message.content;
-    conversation.updatedAt = new Date();
+
+    await conversation.save();
 
     res.status(200).json(conversation);
+
   } catch (error) {
+
     res.status(500).json({
       error: 'Error al actualizar la conversación'
     });
+
   }
+
 });
 
 module.exports = router;
