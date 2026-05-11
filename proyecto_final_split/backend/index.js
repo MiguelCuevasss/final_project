@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+
 dotenv.config();
 
 const connectDB = require('./config/db');
@@ -28,3 +29,16 @@ app.use('/api/auth', authRoutes);
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+const groupRoutes = require('./routes/group.routes');
+app.use('/api/groups', groupRoutes);
+
+
+const groupMessageRoutes = require(
+  './routes/groupMessage.routes'
+);
+
+app.use(
+  '/api/group-messages',
+  groupMessageRoutes
+);
