@@ -24,12 +24,12 @@
           <div
             class="message-row"
             *ngFor="let message of group.messages"
-            [class.mine]="message.author === currentUserName"
+            [class.mine]="message.authorId === currentUserId"
           >
             <div class="bubble">
-              <span>{{ message.author }}</span>
+              <span>{{ message.authorName }}</span>
               <p>{{ message.text }}</p>
-              <small>{{ message.date | date:'shortTime' }}</small>
+              <small>{{ message.createdAt | date:'shortTime' }}</small>
             </div>
           </div>
 
@@ -44,7 +44,7 @@
             placeholder="Escribe un mensaje"
             [(ngModel)]="newMessage"
           >
-          <button (click)="sendMessage()">Enviar</button>
+          <button type="button" (click)="sendMessage()">Enviar</button>
         </div>
       </div>
 
@@ -54,10 +54,10 @@
           <div class="row">
             <input
               type="text"
-              placeholder="Nombre del miembro"
-              [(ngModel)]="newMemberName"
+              placeholder="Usuario o correo"
+              [(ngModel)]="newMemberIdentifier"
             >
-            <button (click)="addMember()">Añadir</button>
+            <button type="button" (click)="addMember()">Añadir</button>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
           <h3>Miembros</h3>
           <div class="members">
             <span class="pill" *ngFor="let member of group.members">
-              {{ member }}
+              @{{ member.username || member.name }}
             </span>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -14,17 +14,16 @@ import { ChatService, ChatMessage } from '../../services/chat';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
-export class GroupsComponent {
-  // GROUPS
+export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   newGroupName = '';
 
   errorMessage = '';
   successMessage = '';
 
+  currentUserId = '';
   currentUserName = 'Usuario';
 
-  // CHAT
   userMessage = '';
   loading = false;
   messages: ChatMessage[] = [];
@@ -32,10 +31,8 @@ export class GroupsComponent {
   editingMessageId: string | null = null;
   editedMessage = '';
 
-  // IMAGEN
   selectedImage: File | null = null;
 
-  // SUGGESTED USERS
   suggestedUsers = [
     {
       name: 'Miguel Cuevas',
@@ -73,17 +70,35 @@ export class GroupsComponent {
     private groupsService: GroupsService,
     private authService: AuthService,
     private chatService: ChatService
-  ) {
-    const currentUser = this.authService.getCurrentUser();
-    this.currentUserName = currentUser?.name || 'Usuario';
+  ) {}
 
-    this.loadGroups();
+  ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+
+    if (currentUser?.id) {
+      this.currentUserId = currentUser.id;
+      this.currentUserName = currentUser.name || 'Usuario';
+      this.loadGroups();
+    } else {
+      this.errorMessage = 'No hay usuario autenticado';
+    }
+
     this.loadMessages();
   }
 
-  // GROUPS
   loadGroups(): void {
-    this.groups = [...this.groupsService.getGroups()];
+    if (!this.currentUserId) {
+      return;
+    }
+
+    this.groupsService.getGroups(this.currentUserId).subscribe({
+      next: (response) => {
+        this.groups = response.groups || [];
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'No se pudieron cargar los grupos';
+      }
+    });
   }
 
   createGroup(): void {
@@ -97,13 +112,23 @@ export class GroupsComponent {
       return;
     }
 
-    this.groupsService.createGroup(name, this.currentUserName);
-    this.newGroupName = '';
-    this.successMessage = 'Grupo creado correctamente';
-    this.loadGroups();
+    if (!this.currentUserId) {
+      this.errorMessage = 'No hay usuario autenticado';
+      return;
+    }
+
+    this.groupsService.createGroup(name, this.currentUserId).subscribe({
+      next: (response) => {
+        this.newGroupName = '';
+        this.successMessage = response.message || 'Grupo creado correctamente';
+        this.loadGroups();
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'No se pudo crear el grupo';
+      }
+    });
   }
 
-  // CHAT
   loadMessages(): void {
     this.chatService.getMessages().subscribe({
       next: (messages) => {
@@ -158,7 +183,6 @@ export class GroupsComponent {
     return formatted.join('');
   }
 
-  // IMAGEN
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] || null;
@@ -166,7 +190,6 @@ export class GroupsComponent {
     this.selectedImage = file;
   }
 
-  // ENVIAR MENSAJE
   sendMessage(): void {
     if (!this.userMessage.trim() && !this.selectedImage) {
       return;
@@ -195,7 +218,6 @@ export class GroupsComponent {
     });
   }
 
-  // EDITAR MENSAJES
   startEditing(message: ChatMessage): void {
     this.editingMessageId = message._id || null;
     this.editedMessage = message.userMessage;

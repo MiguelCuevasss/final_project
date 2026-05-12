@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -12,65 +12,99 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
-export class GroupDetailComponent {
-  groupId = 0;
-  group: Group | undefined;
+export class GroupDetailComponent implements OnInit {
+  groupId = '';
+  group: Group | null = null;
 
-  newMemberName = '';
+  newMemberIdentifier = '';
   newMessage = '';
   errorMessage = '';
   successMessage = '';
-  currentUserName = 'Usuario';
+  currentUserId = '';
 
   constructor(
     private route: ActivatedRoute,
     private groupsService: GroupsService,
     private authService: AuthService
-  ) {
-    const currentUser = this.authService.getCurrentUser();
-    this.currentUserName = currentUser?.name || 'Usuario';
+  ) {}
 
-    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+  ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.currentUserId = currentUser?.id || '';
+
+    this.groupId = this.route.snapshot.paramMap.get('id') || '';
     this.loadGroup();
   }
 
-  loadGroup() {
-    this.group = this.groupsService.getGroupById(this.groupId);
-  }
-
-  addMember() {
-    if (!this.group) return;
-
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const ok = this.groupsService.addMember(this.group.id, this.newMemberName);
-
-    if (!ok) {
-      this.errorMessage = 'No se pudo agregar la persona';
+  loadGroup(): void {
+    if (!this.groupId) {
+      this.group = null;
       return;
     }
 
-    this.newMemberName = '';
-    this.successMessage = 'Persona agregada correctamente';
-    this.loadGroup();
+    this.groupsService.getGroupById(this.groupId).subscribe({
+      next: (response) => {
+        this.group = response.group;
+      },
+      error: (error) => {
+        this.group = null;
+        this.errorMessage = error?.error?.message || 'No se pudo cargar el grupo';
+      }
+    });
   }
 
-  sendMessage() {
-    if (!this.group) return;
+  addMember(): void {
+    if (!this.groupId) return;
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    const ok = this.groupsService.addMessage(this.group.id, this.currentUserName, this.newMessage);
+    const identifier = this.newMemberIdentifier.trim();
 
-    if (!ok) {
+    if (!identifier) {
+      this.errorMessage = 'Escribe un usuario o correo';
+      return;
+    }
+
+    this.groupsService.addMember(this.groupId, identifier).subscribe({
+      next: (response) => {
+        this.group = response.group;
+        this.newMemberIdentifier = '';
+        this.successMessage = response.message || 'Persona agregada correctamente';
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'No se pudo agregar la persona';
+      }
+    });
+  }
+
+  sendMessage(): void {
+    if (!this.groupId) return;
+
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const text = this.newMessage.trim();
+
+    if (!text) {
       this.errorMessage = 'Escribe un mensaje válido';
       return;
     }
 
-    this.newMessage = '';
-    this.successMessage = 'Mensaje enviado';
-    this.loadGroup();
+    if (!this.currentUserId) {
+      this.errorMessage = 'No hay usuario autenticado';
+      return;
+    }
+
+    this.groupsService.addMessage(this.groupId, this.currentUserId, text).subscribe({
+      next: (response) => {
+        this.group = response.group;
+        this.newMessage = '';
+        this.successMessage = response.message || 'Mensaje enviado';
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'No se pudo enviar el mensaje';
+      }
+    });
   }
 }
