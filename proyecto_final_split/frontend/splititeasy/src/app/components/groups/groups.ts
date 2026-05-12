@@ -117,9 +117,20 @@ export class GroupsComponent {
 
   loadGroups(): void {
 
-    this.groups = [
-      ...this.groupsService.getGroups()
-    ];
+    this.groupsService
+      .getGroups()
+      .subscribe({
+
+        next: (groups) => {
+
+          this.groups = groups;
+        },
+
+        error: (error) => {
+
+          console.error(error);
+        }
+      });
   }
 
   createGroup(): void {
@@ -138,17 +149,34 @@ export class GroupsComponent {
       return;
     }
 
-    this.groupsService.createGroup(
-      name,
-      this.currentUserName
-    );
+    const currentUser =
+      this.authService.getCurrentUser();
 
-    this.newGroupName = '';
+    this.groupsService
+      .createGroup(
+        name,
+        currentUser._id
+      )
+      .subscribe({
 
-    this.successMessage =
-      'Grupo creado correctamente';
+        next: () => {
 
-    this.loadGroups();
+          this.newGroupName = '';
+
+          this.successMessage =
+            'Grupo creado correctamente';
+
+          this.loadGroups();
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          this.errorMessage =
+            'Error creando grupo';
+        }
+      });
   }
 
 
