@@ -58,8 +58,12 @@
         <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
 
         <div class="actions">
-          <button class="save-btn" type="submit" [disabled]="isLoading || !profileForm.form.valid">
-            Guardar cambios
+          <button
+            class="save-btn"
+            type="submit"
+            [disabled]="isLoading || isSaving || !profileForm.form.valid"
+          >
+            {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
           </button>
         </div>
       </form>

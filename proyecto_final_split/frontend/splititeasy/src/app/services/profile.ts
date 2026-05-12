@@ -14,10 +14,44 @@ export interface Profile {
 export class ProfileService {
   constructor(private authService: AuthService) {}
 
-  getProfile(): Observable<Profile> {
+  private getStoredUser(): CurrentUser | null {
     const current = this.authService.getCurrentUser();
+    if (current?.id) {
+      return current;
+    }
 
-    if (!current?.id) {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return null;
+    }
+
+    const raw = localStorage.getItem('currentUser');
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      const id = parsed?.id || parsed?._id || '';
+      if (!id) return null;
+
+      return {
+        id,
+        _id: parsed?._id || id,
+        name: parsed?.name || '',
+        lastname: parsed?.lastname || '',
+        username: parsed?.username || '',
+        email: parsed?.email || '',
+        description: parsed?.description || ''
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  getProfile(): Observable<Profile> {
+    const user = this.getStoredUser();
+
+    if (!user?.id) {
       return of({
         name: '',
         email: '',
@@ -26,19 +60,22 @@ export class ProfileService {
     }
 
     return of({
-      name: current.name || '',
-      email: current.email || '',
-      description: current.description || ''
+      name: user.name || '',
+      email: user.email || '',
+      description: user.description || ''
     });
   }
 
   saveProfile(profile: Profile): Observable<any> {
-    const current = this.authService.getCurrentUser();
+    const user = this.getStoredUser();
 
-    if (!current?.id) {
-      throw new Error('No hay usuario autenticado');
+    if (!user?.id) {
+      return of({
+        success: false,
+        message: 'No hay usuario autenticado'
+      });
     }
 
-    return this.authService.updateProfile(current.id, profile);
+    return this.authService.updateProfile(user.id, profile);
   }
 }

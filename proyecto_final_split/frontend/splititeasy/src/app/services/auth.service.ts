@@ -63,7 +63,7 @@ export class AuthService {
     return this.http.get<any>(`${this.apiUrl}/me/${id}`);
   }
 
-  updateProfile(id: string, profile: Partial<CurrentUser>): Observable<any> {
+  updateProfile(id: string, profile: { name: string; email: string; description: string }): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/profile/${id}`, profile).pipe(
       tap((response) => {
         if (response?.user) {

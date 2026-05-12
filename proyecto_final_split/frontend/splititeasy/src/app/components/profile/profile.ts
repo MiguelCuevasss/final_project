@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { ProfileService, Profile } from '../../services/profile';
 import { AuthService } from '../../services/auth.service';
 
@@ -21,10 +23,12 @@ export class ProfileComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   isLoading = false;
+  isSaving = false;
 
   constructor(
     private profileService: ProfileService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -67,20 +71,38 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.profileService.saveProfile(this.profile).subscribe({
-      next: (response) => {
-        this.successMessage = response?.message || 'Perfil actualizado correctamente';
-        if (response?.user) {
-          this.profile = {
-            name: response.user.name || '',
-            email: response.user.email || '',
-            description: response.user.description || ''
-          };
+    this.isSaving = true;
+
+    this.profileService
+      .saveProfile(this.profile)
+      .pipe(finalize(() => (this.isSaving = false)))
+      .subscribe({
+        next: (response) => {
+          if (response?.success === false) {
+            this.errorMessage = response?.message || 'No se pudo guardar el perfil';
+            return;
+          }
+
+          this.successMessage = 'Cambios guardados';
+
+          if (response?.user) {
+            this.profile = {
+              name: response.user.name || '',
+              email: response.user.email || '',
+              description: response.user.description || ''
+            };
+          }
+
+          setTimeout(() => {
+            this.router.navigate(['/groups']);
+          }, 1200);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Error al guardar perfil';
         }
-      },
-      error: (error) => {
-        this.errorMessage = error?.error?.message || error?.message || 'Error al guardar perfil';
-      }
-    });
+      });
   }
 }
