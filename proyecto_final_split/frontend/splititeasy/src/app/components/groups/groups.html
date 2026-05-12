@@ -17,12 +17,9 @@
             placeholder="Nombre del grupo"
             [(ngModel)]="newGroupName"
             name="newGroupName"
-          >
+          />
 
-          <button
-            type="button"
-            (click)="createGroup()"
-          >
+          <button type="button" (click)="createGroup()">
             Crear
           </button>
         </div>
@@ -59,15 +56,12 @@
       <div class="chatbot-container">
 
         <div class="chatbot-card">
-
           <div class="chat-header">
-            <img
-              src="/coin.png"
-              alt="AI coin"
-              class="chat-avatar"
-            />
+            <div class="chat-avatar-wrap">
+              <img src="/coin.png" alt="AI coin" class="chat-avatar" />
+            </div>
 
-            <div>
+            <div class="chat-header-text">
               <h2>Asistente de SplitItEasy</h2>
               <p class="chat-subtitle">
                 Pregúntame sobre presupuestos, gastos o grupos.
@@ -75,102 +69,114 @@
             </div>
           </div>
 
-          <!-- HISTORIAL -->
           <div class="chat-history">
-
-            <div
-              class="message-block"
-              *ngFor="let msg of messages"
-            >
+            <div class="message-block" *ngFor="let msg of messages">
 
               <!-- USER -->
-              <div class="user-message">
-                <div class="message-label">
-                  Tú
-                </div>
+              <div class="message-row user-row">
+                <div class="message-card user-card">
+                  <div class="message-top">
+                    <div class="message-user">
+                      <div class="message-icon user-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12 12c2.761 0 5-2.239 5-5S14.761 2 12 2 7 4.239 7 7s2.239 5 5 5zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"></path>
+                        </svg>
+                      </div>
+                      <span class="message-name">Tú</span>
+                    </div>
 
-                <div *ngIf="editingMessageId !== msg._id">
-
-                  <div class="message-bubble user-bubble">
-                    {{ msg.userMessage }}
+                    <span class="message-time">
+                      {{ msg.createdAt ? (msg.createdAt | date:'HH:mm') : '' }}
+                      <span class="read-icon" *ngIf="!editingMessageId || editingMessageId !== msg._id">
+                        ✓✓
+                      </span>
+                    </span>
                   </div>
 
-                  <button
-                    class="edit-btn"
-                    type="button"
-                    (click)="startEditing(msg)"
-                  >
-                    Editar
-                  </button>
-
-                </div>
-
-                <div *ngIf="editingMessageId === msg._id">
-
-                  <input
-                    type="text"
-                    [(ngModel)]="editedMessage"
-                    class="edit-input"
-                  />
-
-                  <div class="edit-actions">
+                  <div *ngIf="editingMessageId !== msg._id; else editMode">
+                    <div class="message-content user-content">
+                      {{ msg.userMessage }}
+                    </div>
 
                     <button
-                      class="save-btn"
+                      class="edit-btn"
                       type="button"
-                      (click)="saveEdit(msg)"
+                      (click)="startEditing(msg)"
                     >
-                      Guardar
+                      <span class="edit-btn-icon">✎</span>
+                      Editar
                     </button>
-
-                    <button
-                      class="cancel-btn"
-                      type="button"
-                      (click)="cancelEditing()"
-                    >
-                      Cancelar
-                    </button>
-
                   </div>
 
+                  <ng-template #editMode>
+                    <input
+                      type="text"
+                      [(ngModel)]="editedMessage"
+                      class="edit-input"
+                    />
+
+                    <div class="edit-actions">
+                      <button
+                        class="save-btn"
+                        type="button"
+                        (click)="saveEdit(msg)"
+                      >
+                        Guardar
+                      </button>
+
+                      <button
+                        class="cancel-btn"
+                        type="button"
+                        (click)="cancelEditing()"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
 
-              <!-- IA -->
-              <div class="ai-message">
-                <div class="message-label ai-label">
-                  SplitItEasy AI
-                </div>
+              <!-- AI -->
+              <div class="message-row ai-row">
+                <div class="message-card ai-card">
+                  <div class="message-top">
+                    <div class="message-user ai-user">
+                      <div class="message-icon ai-icon">
+                        <img src="/coin.png" alt="Coin" class="message-coin" />
+                      </div>
+                      <span class="message-name ai-name">SplitItEasy AI</span>
+                    </div>
 
-                <div class="message-bubble ai-bubble">
-                  {{ msg.aiResponse }}
+                    <span class="message-time ai-time">
+                      {{ msg.createdAt ? (msg.createdAt | date:'HH:mm') : '' }}
+                    </span>
+                  </div>
+
+                  <div
+                    class="message-content ai-content"
+                    [innerHTML]="formatAiResponse(msg.aiResponse)"
+                  ></div>
                 </div>
               </div>
-
             </div>
-
           </div>
-          
 
           <div class="image-upload">
+            <label class="upload-box">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageSelected($event)"
+              />
+              <span class="upload-icon">📎</span>
+              <span class="upload-text">Seleccionar archivo</span>
+              <span class="upload-file">
+                {{ selectedImage ? selectedImage.name : 'Sin archivos seleccionados' }}
+              </span>
+            </label>
+          </div>
 
-          <input
-            type="file"
-            accept="image/*"
-            (change)="onImageSelected($event)"
-          />
-
-          <p *ngIf="selectedImage" class="selected-image">
-            Imagen seleccionada:
-            {{ selectedImage.name }}
-          </p>
-
-        </div>
-
-    
-          <!-- INPUT -->
           <div class="chat-input-row">
-
             <input
               type="text"
               [(ngModel)]="userMessage"
@@ -186,44 +192,31 @@
               (click)="sendMessage()"
               [disabled]="loading"
             >
+              <span class="send-icon">➤</span>
               {{ loading ? 'Enviando...' : 'Enviar' }}
             </button>
-
           </div>
-
         </div>
 
-        <!-- SUGERENCIAS -->
+        <!-- SUGGESTIONS -->
         <div class="suggestions-card">
-
           <div class="suggestions-header">
             <div>
-              <span class="suggestions-badge">
-                Sugerencias
-              </span>
-
+              <span class="suggestions-badge">Sugerencias</span>
               <h3>Agrega amigos a tus grupos</h3>
-
-              <p>
-                Personas que podrías sumar para dividir gastos.
-              </p>
+              <p>Personas que podrías sumar para dividir gastos.</p>
             </div>
 
-            <button
-              class="view-all-btn"
-              type="button"
-            >
+            <button class="view-all-btn" type="button">
               Ver todo
             </button>
           </div>
 
           <div class="suggestions-list">
-
             <article
               class="suggestion-item"
               *ngFor="let user of suggestedUsers"
             >
-
               <img
                 [src]="user.avatar"
                 [alt]="user.name"
@@ -233,20 +226,13 @@
               <div class="suggestion-meta">
                 <h4>{{ user.name }}</h4>
                 <p>@{{ user.username }}</p>
-                <span>
-                  {{ user.mutualGroups }} grupos en común
-                </span>
+                <span>{{ user.mutualGroups }} grupos en común</span>
               </div>
 
-              <button
-                class="add-btn"
-                type="button"
-              >
+              <button class="add-btn" type="button">
                 Agregar
               </button>
-
             </article>
-
           </div>
         </div>
 
