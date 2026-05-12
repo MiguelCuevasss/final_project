@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 export interface CurrentUser {
   id: string;
+  _id?: string;
   name: string;
   lastname: string;
   username: string;
@@ -38,17 +39,20 @@ export class AuthService {
   }
 
   getCurrentUser(): CurrentUser | null {
-    return this.currentUserSubject.value;
+    const current = this.currentUserSubject.value;
+    return current ? this.normalizeUser(current) : null;
   }
 
-  setCurrentUser(user: CurrentUser | null): void {
-    if (user) {
-      localStorage.setItem(this.storageKey, JSON.stringify(user));
-    } else {
+  setCurrentUser(user: any): void {
+    if (!user) {
       localStorage.removeItem(this.storageKey);
+      this.currentUserSubject.next(null);
+      return;
     }
 
-    this.currentUserSubject.next(user);
+    const normalized = this.normalizeUser(user);
+    localStorage.setItem(this.storageKey, JSON.stringify(normalized));
+    this.currentUserSubject.next(normalized);
   }
 
   logout(): void {
@@ -69,7 +73,25 @@ export class AuthService {
     );
   }
 
+  private normalizeUser(user: any): CurrentUser {
+    const id = user?.id || user?._id || '';
+
+    return {
+      id,
+      _id: user?._id || user?.id || '',
+      name: user?.name || '',
+      lastname: user?.lastname || '',
+      username: user?.username || '',
+      email: user?.email || '',
+      description: user?.description || ''
+    };
+  }
+
   private readCurrentUser(): CurrentUser | null {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return null;
+    }
+
     const raw = localStorage.getItem(this.storageKey);
 
     if (!raw) {
@@ -77,7 +99,7 @@ export class AuthService {
     }
 
     try {
-      return JSON.parse(raw) as CurrentUser;
+      return this.normalizeUser(JSON.parse(raw));
     } catch {
       return null;
     }

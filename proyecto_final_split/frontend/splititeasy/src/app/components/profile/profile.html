@@ -19,32 +19,50 @@
         </div>
       </div>
 
-      <div class="form-grid">
-        <div class="input-group">
-          <label>Nombre</label>
-          <input type="text" [(ngModel)]="profile.name" placeholder="Tu nombre">
+      <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="profile.name"
+              placeholder="Tu nombre"
+              required
+            >
+          </div>
+
+          <div class="input-group">
+            <label>Correo electrónico</label>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="profile.email"
+              placeholder="tucorreo@gmail.com"
+              required
+            >
+          </div>
+
+          <div class="input-group full">
+            <label>Descripción</label>
+            <textarea
+              name="description"
+              [(ngModel)]="profile.description"
+              placeholder="Escribe algo sobre ti para tus amigos"
+            ></textarea>
+          </div>
         </div>
 
-        <div class="input-group">
-          <label>Correo electrónico</label>
-          <input type="email" [(ngModel)]="profile.email" placeholder="tucorreo@gmail.com">
+        <div *ngIf="isLoading" class="info-msg">Cargando perfil...</div>
+        <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+        <div class="actions">
+          <button class="save-btn" type="submit" [disabled]="isLoading || !profileForm.form.valid">
+            Guardar cambios
+          </button>
         </div>
-
-        <div class="input-group full">
-          <label>Descripción</label>
-          <textarea
-            [(ngModel)]="profile.description"
-            placeholder="Escribe algo sobre ti para tus amigos"
-          ></textarea>
-        </div>
-      </div>
-
-      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
-      <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
-
-      <div class="actions">
-        <button class="save-btn" (click)="saveProfile()">Guardar cambios</button>
-      </div>
+      </form>
     </div>
   </div>
 </section>

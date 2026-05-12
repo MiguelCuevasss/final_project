@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { AuthService, CurrentUser } from './auth.service';
 
 export interface Profile {
   name: string;
@@ -10,24 +12,33 @@ export interface Profile {
   providedIn: 'root'
 })
 export class ProfileService {
-  private storageKey = 'profile';
-  private profile: Profile = {
-    name: '',
-    email: '',
-    description: ''
-  };
+  constructor(private authService: AuthService) {}
 
-  constructor() {
-    const data = localStorage.getItem(this.storageKey);
-    this.profile = data ? JSON.parse(data) : this.profile;
+  getProfile(): Observable<Profile> {
+    const current = this.authService.getCurrentUser();
+
+    if (!current?.id) {
+      return of({
+        name: '',
+        email: '',
+        description: ''
+      });
+    }
+
+    return of({
+      name: current.name || '',
+      email: current.email || '',
+      description: current.description || ''
+    });
   }
 
-  getProfile() {
-    return this.profile;
-  }
+  saveProfile(profile: Profile): Observable<any> {
+    const current = this.authService.getCurrentUser();
 
-  saveProfile(profile: Profile) {
-    this.profile = { ...profile };
-    localStorage.setItem(this.storageKey, JSON.stringify(this.profile));
+    if (!current?.id) {
+      throw new Error('No hay usuario autenticado');
+    }
+
+    return this.authService.updateProfile(current.id, profile);
   }
 }
