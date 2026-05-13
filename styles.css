@@ -1,4 +1,6 @@
-/* HERO */
+/* Sección principal HERO de bienvenida
+   mostrada en la landing page. */
+
 .hero {
   min-height: auto;
   padding: 90px 0 40px;
@@ -7,9 +9,17 @@
   justify-content: center;
 }
 
+
+/* Fondo global y colores principales
+   de la landing page. */
+
 body { 
-  background: #020c1b; color: white; 
+  background: #020c1b;
+  color: white; 
 }
+
+
+/* Contenedor principal del HERO. */
 
 .container {
   width: 90%;
@@ -19,9 +29,16 @@ body {
   justify-content: space-between;
 }
 
+
+/* Área izquierda con textos,
+   descripción y botones CTA. */
+
 .left {
   max-width: 520px;
 }
+
+
+/* Badge decorativo superior. */
 
 .badge {
   display: inline-flex;
@@ -42,6 +59,9 @@ body {
   border-radius: 50%;
 }
 
+
+/* Títulos y descripción principales. */
+
 h1 {
   font-size: 64px;
   line-height: 1.1;
@@ -59,6 +79,9 @@ h1 span {
   font-size: 16px;
 }
 
+
+/* Botón principal CTA. */
+
 .cta {
   background: #1f8f6a;
   border: none;
@@ -74,10 +97,16 @@ h1 span {
   background: #27ae60;
 }
 
-/* RIGHT */
+
+/* Área derecha del HERO
+   con logo e imagen principal. */
+
 .right {
   text-align: center;
 }
+
+
+/* Círculo decorativo del logo. */
 
 .circle {
   width: 220px;
@@ -119,9 +148,8 @@ h1 span {
   letter-spacing: 1px;
 }
 
-/* Fin del HERO */
 
-/* Esta es la parte del footer */
+/* Footer principal de la landing page. */
 
 .footer {
   background: #010814;
@@ -149,6 +177,9 @@ h1 span {
   color: #7f8c8d;
 }
 
+
+/* Links del footer. */
+
 .footer-links {
   display: flex;
   gap: 25px;
@@ -165,10 +196,9 @@ h1 span {
   color: #38d39f;
 }
 
-/* Hasta aqui termina el footer */
 
+/* Sección de tarjetas informativas. */
 
-/* Estilos para las cartas */
 .cards-section {
   padding: 80px 0;
 }
@@ -181,6 +211,9 @@ h1 span {
   grid-template-columns: repeat(4, 1fr);
   gap: 25px;
 }
+
+
+/* Tarjetas individuales informativas. */
 
 .card {
   background: #0a1a2f;
@@ -208,10 +241,10 @@ h1 span {
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-/* Hasta aqui terminan las cartas */
 
+/* Sección storytelling de la aplicación:
+   problema, solución y funcionamiento. */
 
-/* Aquí está lo de cómo funciona, problema y pasos (le puse story porque es como el storytelling de la app */
 .story-section {
   padding: 18px 0 54px;
 }
@@ -228,6 +261,9 @@ h1 span {
   margin-bottom: 18px;
 }
 
+
+/* Paneles visuales del storytelling. */
+
 .story-panel {
   position: relative;
   overflow: hidden;
@@ -235,20 +271,10 @@ h1 span {
   border: 1px solid rgba(56, 211, 159, 0.12);
   border-radius: 26px;
   padding: 28px 30px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
 }
 
-.story-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(56, 211, 159, 0.85), transparent 70%);
-}
+
+/* Etiquetas y textos descriptivos. */
 
 .eyebrow {
   display: inline-block;
@@ -272,55 +298,42 @@ h1 span {
   margin-bottom: 10px;
 }
 
+
+/* Chips decorativos informativos. */
+
 .story-chip {
   margin-top: auto;
   align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(56, 211, 159, 0.10);
-  border: 1px solid rgba(56, 211, 159, 0.18);
-  color: #eafff6;
-  font-size: 13px;
-  font-weight: 600;
 }
 
-/* BENEFICIOS */
+
+/* Panel específico de beneficios. */
+
 .story-panel-benefits {
   background: linear-gradient(180deg, rgba(7, 22, 39, 0.8), rgba(5, 14, 28, 0.95));
 }
 
 .benefits-grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 12px;
-  margin-top: 4px;
 }
+
+
+/* Beneficios individuales. */
 
 .benefit-item {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(2, 12, 27, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  color: #d7dee8;
-  line-height: 1.5;
 }
 
 .mini-dot {
   width: 10px;
   height: 10px;
-  margin-top: 6px;
-  border-radius: 50%;
-  background: #38d39f;
-  box-shadow: 0 0 0 4px rgba(56, 211, 159, 0.12);
-  flex: 0 0 auto;
 }
 
-/* CÓMO FUNCIONA */
+
+/* Panel "cómo funciona". */
+
 .story-panel-steps {
   background: linear-gradient(180deg, rgba(8, 24, 42, 0.88), rgba(4, 13, 25, 0.96));
 }
@@ -328,47 +341,34 @@ h1 span {
 .steps-list {
   display: grid;
   gap: 12px;
-  margin-top: 10px;
 }
+
+
+/* Pasos individuales explicativos. */
 
 .step-item {
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 14px;
-  align-items: start;
-  padding: 15px 16px;
-  border-radius: 18px;
-  background: rgba(2, 12, 27, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .step-num {
   width: 40px;
   height: 40px;
-  border-radius: 14px;
-  background: rgba(56, 211, 159, 0.12);
-  border: 1px solid rgba(56, 211, 159, 0.18);
-  color: #38d39f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
 }
 
 .step-item h3 {
   font-size: 16px;
   color: #fff;
-  margin-bottom: 4px;
 }
 
 .step-item p {
-  margin: 0;
   color: #9aa4b2;
-  font-size: 14px;
-  line-height: 1.6;
 }
 
-/* RESPONSIVE */
+
+/* Responsive del storytelling. */
+
 @media (max-width: 900px) {
   .story-grid {
     grid-template-columns: 1fr;
@@ -379,7 +379,9 @@ h1 span {
   }
 }
 
-/* CTA entre story panels y cards */
+
+/* CTA intermedio entre secciones. */
+
 .cta-section {
   padding: 40px 0 30px;
   display: flex;
@@ -391,20 +393,10 @@ h1 span {
   text-align: center;
   padding: 40px;
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(10,26,47,0.6), rgba(5,14,28,0.9));
-  border: 1px solid rgba(56, 211, 159, 0.15);
-  backdrop-filter: blur(10px);
 }
 
-.cta-box h2 {
-  font-size: 28px;
-  margin-bottom: 12px;
-}
 
-.cta-box p {
-  color: #9aa4b2;
-  margin-bottom: 24px;
-}
+/* Botón principal del CTA. */
 
 .cta-main {
   background: linear-gradient(90deg, #1f8f6a, #2ecc71);
@@ -422,9 +414,11 @@ h1 span {
   box-shadow: 0 10px 25px rgba(46, 204, 113, 0.25);
 }
 
-/*Responsive*/
+
+/* Responsive general de la landing page. */
 
 @media (max-width: 900px) {
+
   .container {
     flex-direction: column;
     text-align: center;

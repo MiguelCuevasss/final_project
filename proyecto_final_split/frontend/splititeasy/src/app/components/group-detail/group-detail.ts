@@ -1,3 +1,11 @@
+// Componente del contenido del grupo 
+
+// Se encarga de:
+// - cargar la información del grupo
+// - agregar miembros
+// - enviar mensajes
+// - mantener el estado visual de carga, error y éxito
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +43,11 @@ export class GroupDetailComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  // Al inicializar el componente:
+  // - obtiene el usuario autenticado,
+  // - toma el ID del grupo desde la ruta,
+  // - y carga el grupo desde navegación o desde el backend.
+  
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
     this.currentUserId = currentUser?.id || '';
@@ -52,6 +65,8 @@ export class GroupDetailComponent implements OnInit {
     this.loadGroup();
   }
 
+  // Carga la información completa del grupo
+  // usando el usuario autenticado y el ID del grupo.
   loadGroup(): void {
     this.errorMessage = '';
     this.successMessage = '';
@@ -97,6 +112,8 @@ export class GroupDetailComponent implements OnInit {
       });
   }
 
+  // Agrega un nuevo miembro al grupo
+  // usando username o correo.
   addMember(): void {
     this.errorMessage = '';
     this.successMessage = '';
@@ -121,6 +138,8 @@ export class GroupDetailComponent implements OnInit {
     });
   }
 
+  // Envía un mensaje al grupo
+  // usando el usuario autenticado como autor.
   sendMessage(): void {
     this.errorMessage = '';
     this.successMessage = '';

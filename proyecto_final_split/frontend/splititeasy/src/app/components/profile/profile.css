@@ -1,3 +1,6 @@
+/* Vista de perfil con tarjeta centralizada,
+   pensada para editar la información del usuario. */
+
 .profile-section {
   min-height: calc(100vh - 96px);
   background: radial-gradient(circle at top, #031826, #020c1b);
@@ -7,11 +10,19 @@
   align-items: center;
 }
 
+
+/* Contenedor que limita el ancho
+   y centra el contenido del perfil. */
+
 .profile-shell {
   width: min(1100px, 100%);
   display: flex;
   justify-content: center;
 }
+
+
+/* Tarjeta principal del perfil.
+   Agrupa encabezado, formulario, mensajes y botón. */
 
 .profile-card {
   width: 100%;
@@ -34,6 +45,10 @@
   pointer-events: none;
 }
 
+
+/* Encabezado del perfil con icono,
+   título y descripción. */
+
 .profile-header {
   position: relative;
   z-index: 1;
@@ -42,6 +57,9 @@
   gap: 24px;
   margin-bottom: 36px;
 }
+
+
+/* Ícono visual del perfil. */
 
 .profile-icon {
   width: 104px;
@@ -59,6 +77,9 @@
   height: 54px;
   color: #ffffff;
 }
+
+
+/* Badge informativo decorativo del perfil. */
 
 .badge {
   display: inline-flex;
@@ -83,6 +104,9 @@
   box-shadow: 0 0 0 6px rgba(56, 211, 159, 0.12);
 }
 
+
+/* Título y texto descriptivo del perfil. */
+
 .profile-header h2 {
   color: #ffffff;
   font-size: clamp(32px, 4vw, 54px);
@@ -98,6 +122,9 @@
   margin: 0;
 }
 
+
+/* Estructura del formulario en dos columnas. */
+
 .form-grid {
   position: relative;
   z-index: 1;
@@ -106,6 +133,9 @@
   gap: 22px;
   margin-top: 10px;
 }
+
+
+/* Grupo general para cada campo del formulario. */
 
 .input-group {
   display: flex;
@@ -123,6 +153,9 @@
   font-weight: 700;
   letter-spacing: 0.2px;
 }
+
+
+/* Inputs y textarea con estilo uniforme. */
 
 .input-group input,
 .input-group textarea {
@@ -158,6 +191,9 @@
   transform: translateY(-1px);
 }
 
+
+/* Mensajes de error y éxito del perfil. */
+
 .error-msg,
 .success-msg {
   position: relative;
@@ -181,6 +217,9 @@
   color: #6ee7b7;
 }
 
+
+/* Zona de acciones del formulario. */
+
 .actions {
   position: relative;
   z-index: 1;
@@ -188,6 +227,9 @@
   display: flex;
   justify-content: flex-start;
 }
+
+
+/* Botón para guardar cambios del perfil. */
 
 .save-btn {
   display: inline-flex;
@@ -218,6 +260,9 @@
   transform: translateY(0);
 }
 
+
+/* Ajustes responsive para pantallas medianas. */
+
 @media (max-width: 900px) {
   .profile-card {
     padding: 28px;
@@ -242,6 +287,9 @@
     width: 100%;
   }
 }
+
+
+/* Ajustes responsive para móviles pequeños. */
 
 @media (max-width: 600px) {
   .profile-section {

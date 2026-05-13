@@ -1,3 +1,8 @@
+// Componente raíz de la aplicación Angular.
+// Se encarga de cargar:
+// - el header principal
+// - las rutas dinámicas mediante RouterOutlet
+
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header';
@@ -10,5 +15,7 @@ import { HeaderComponent } from './components/header/header';
   styleUrl: './app.css'
 })
 export class App {
+
+// Nombre principal de la app.
   protected readonly title = signal('splititeasy');
 }

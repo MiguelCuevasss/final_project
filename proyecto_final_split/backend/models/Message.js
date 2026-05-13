@@ -1,3 +1,6 @@
+// Este archivo define el modelo Message de MongoDB.
+// Se utiliza para guardar conversaciones entre el usuario y el asistente de IA.
+
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({

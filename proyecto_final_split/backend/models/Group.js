@@ -1,3 +1,5 @@
+ //Este archivo define el modelo Group de MongoDB para la aplicación. Representa los grupos creados por los usuarios y sus features del mismo.
+
 const mongoose = require('mongoose');
 
 const groupMemberSchema = new mongoose.Schema(

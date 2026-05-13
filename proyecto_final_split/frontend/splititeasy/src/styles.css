@@ -1,11 +1,15 @@
-/* RESET GLOBAL */
+/* Reset global para eliminar márgenes,
+   padding y mantener tamaños consistentes. */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* APP COMPLETA */
+/* Estilos generales de toda la aplicación.
+   Define fondo principal y evita scroll horizontal. */
+
 html,
 body {
   width: 100%;
@@ -15,7 +19,8 @@ body {
   background: radial-gradient(circle at top, #031826, #020c1b);
 }
 
-/* ROOT ANGULAR */
+/* Estilos base del componente raíz Angular. */
+
 app-root {
   display: block;
   min-height: 100vh;

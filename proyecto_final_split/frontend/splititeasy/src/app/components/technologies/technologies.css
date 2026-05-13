@@ -1,14 +1,24 @@
+/* Sección principal de tecnologías usadas
+   dentro de la aplicación. */
+
 .tech-section {
   background: #020c1b;
   min-height: 100vh;
   padding: 120px 0 80px;
 }
 
+
+/* Contenedor central de la sección. */
+
 .tech-container {
   width: 90%;
   max-width: 1100px;
   margin: auto;
 }
+
+
+/* Encabezado principal con título
+   y descripción. */
 
 .tech-header {
   text-align: center;
@@ -31,6 +41,9 @@
   margin: auto;
 }
 
+
+/* Badge decorativo superior. */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -50,11 +63,17 @@
   border-radius: 50%;
 }
 
+
+/* Grid principal de tecnologías. */
+
 .tech-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 25px;
 }
+
+
+/* Tarjetas individuales de tecnologías. */
 
 .tech-card {
   background: #0a1a2f;
@@ -79,7 +98,10 @@
   border-color: rgba(56, 211, 159, 0.4);
 }
 
-/* RESPONSIVE */
+
+/* Adaptación responsive para tablets
+   y pantallas medianas. */
+
 @media (max-width: 900px) {
   .tech-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -1,3 +1,6 @@
+// Este archivo define el modelo User de MongoDB.
+// Representa a los usuarios registrados dentro de SplitItEasy.
+
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(

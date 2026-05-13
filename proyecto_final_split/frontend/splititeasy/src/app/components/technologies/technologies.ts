@@ -1,3 +1,6 @@
+// Contiene un arreglo con nombre y descripción
+// de cada tecnología para renderizarlas en la vista.
+
 import { Component } from '@angular/core';
 
 @Component({

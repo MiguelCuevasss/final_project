@@ -1,11 +1,24 @@
+<!--
+Vista principal de autenticación.
+Permite:
+- iniciar sesión
+- registrarse
+- validar contraseñas
+- mostrar mensajes de error y éxito
+-->
+
 <section class="auth-section">
   <div class="auth-container">
     <div class="auth-box">
+
+      <!-- Badge decorativo superior -->
       <span class="badge">
         <span class="dot"></span>
         Bienvenido a SplitItEasy
       </span>
 
+      <!-- Título y subtítulo dinámicos
+      dependiendo del modo login/registro -->
       <h2>
         {{ isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }}
       </h2>
@@ -16,8 +29,11 @@
           : 'Empieza a gestionar tus gastos fácilmente' }}
       </p>
 
+      <!-- Formulario principal -->
       <form (submit)="submitForm($event)">
 
+        <!-- Campos de nombre y apellido
+        visibles solo en registro -->
         <div *ngIf="!isLogin" class="row">
           <div class="input-group">
             <input
@@ -38,6 +54,7 @@
           </div>
         </div>
 
+        <!-- Campo username para registro -->
         <div class="input-group" *ngIf="!isLogin">
           <input
             type="text"
@@ -47,6 +64,7 @@
             required>
         </div>
 
+        <!-- Campo login usando usuario o correo -->
         <div class="input-group" *ngIf="isLogin">
           <input
             type="text"
@@ -56,6 +74,7 @@
             required>
         </div>
 
+        <!-- Campo email para registro -->
         <div class="input-group" *ngIf="!isLogin">
           <input
             type="email"
@@ -65,6 +84,7 @@
             required>
         </div>
 
+        <!-- Campo contraseña -->
         <div class="input-group">
           <input
             type="password"
@@ -74,6 +94,8 @@
             required>
         </div>
 
+        <!-- Confirmación de contraseña
+        visible solo en registro -->
         <div class="input-group" *ngIf="!isLogin">
           <input
             type="password"
@@ -88,6 +110,7 @@
           </p>
         </div>
 
+        <!-- Mensajes visuales -->
         <div *ngIf="errorMessage" class="error-msg">
           {{ errorMessage }}
         </div>
@@ -96,6 +119,7 @@
           {{ successMessage }}
         </div>
 
+        <!-- Botón principal del formulario -->
         <button
           class="auth-btn"
           [disabled]="!isLogin && passwordsDoNotMatch()">
@@ -103,6 +127,7 @@
         </button>
       </form>
 
+      <!-- Cambio entre login y registro -->
       <p class="switch">
         {{ isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
         <span (click)="toggleMode()">

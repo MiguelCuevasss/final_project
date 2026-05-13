@@ -1,5 +1,18 @@
+<!--
+Vista principal del detalle de un grupo.
+Muestra:
+- información del grupo
+- chat grupal
+- miembros
+- formulario para agregar usuarios
+-->
+
 <section class="group-detail-section" *ngIf="!isLoading; else loadingTpl">
   <div class="group-detail-shell" *ngIf="group; else noGroup">
+
+
+    <!-- Encabezado del grupo con nombre,
+    avatar y navegación de regreso -->
     <div class="detail-header">
       <div class="title-block">
         <div class="avatar">
@@ -15,11 +28,21 @@
       <a routerLink="/groups" class="back-link">Volver</a>
     </div>
 
+
+    <!-- Mensajes de error o éxito -->
     <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
     <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
 
+
+    <!-- Layout principal dividido entre
+    chat y panel lateral -->
     <div class="layout">
+
+
+      <!-- Panel del chat grupal -->
       <div class="chat-panel">
+
+        <!-- Lista de mensajes -->
         <div class="messages">
           <div
             class="message-row"
@@ -38,6 +61,8 @@
           </div>
         </div>
 
+
+        <!-- Campo para enviar nuevos mensajes -->
         <div class="composer">
           <input
             type="text"
@@ -48,7 +73,11 @@
         </div>
       </div>
 
+
+      <!-- Panel lateral del grupo -->
       <div class="side-panel">
+
+        <!-- Formulario para agregar miembros -->
         <div class="box">
           <h3>Añadir miembro</h3>
           <div class="row">
@@ -61,6 +90,8 @@
           </div>
         </div>
 
+
+        <!-- Lista de miembros actuales -->
         <div class="box">
           <h3>Miembros</h3>
           <div class="members">
@@ -74,6 +105,8 @@
   </div>
 </section>
 
+
+<!-- Vista mostrada cuando el grupo no existe -->
 <ng-template #noGroup>
   <section class="group-detail-section">
     <div class="group-detail-shell">
@@ -85,6 +118,9 @@
   </section>
 </ng-template>
 
+
+<!-- Vista de carga mientras se obtiene
+la información del grupo -->
 <ng-template #loadingTpl>
   <section class="group-detail-section">
     <div class="group-detail-shell">

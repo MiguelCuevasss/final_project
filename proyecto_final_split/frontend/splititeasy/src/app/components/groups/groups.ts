@@ -1,3 +1,11 @@
+// Componente principal de la vista de grupos.
+// Se encarga de:
+// - listar grupos del usuario
+// - crear grupos nuevos
+// - mostrar el chat con IA
+// - subir imágenes
+// - editar mensajes guardados
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +41,8 @@ export class GroupsComponent implements OnInit {
 
   selectedImage: File | null = null;
 
+  // Lista fija de usuarios sugeridos
+  // que se muestra en la interfaz.
   suggestedUsers = [
     {
       name: 'Miguel Cuevas',
@@ -72,6 +82,10 @@ export class GroupsComponent implements OnInit {
     private chatService: ChatService
   ) {}
 
+  // Al iniciar el componente:
+  // - obtiene el usuario autenticado
+  // - carga los grupos del usuario
+  // - carga el historial del chat con IA
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
 
@@ -86,6 +100,8 @@ export class GroupsComponent implements OnInit {
     this.loadMessages();
   }
 
+  // Obtiene los grupos del usuario autenticado
+  // desde el backend.
   loadGroups(): void {
     if (!this.currentUserId) {
       return;
@@ -101,6 +117,8 @@ export class GroupsComponent implements OnInit {
     });
   }
 
+  // Crea un nuevo grupo usando el nombre escrito
+  // por el usuario actual.
   createGroup(): void {
     this.errorMessage = '';
     this.successMessage = '';
@@ -129,6 +147,8 @@ export class GroupsComponent implements OnInit {
     });
   }
 
+  // Carga el historial de mensajes
+  // del asistente de IA.
   loadMessages(): void {
     this.chatService.getMessages().subscribe({
       next: (messages) => {
@@ -140,6 +160,8 @@ export class GroupsComponent implements OnInit {
     });
   }
 
+  // Da formato a la respuesta de la IA
+  // para mostrar negritas y listas dentro del HTML.
   formatAiResponse(text: string): string {
     if (!text) return '';
 
@@ -183,6 +205,8 @@ export class GroupsComponent implements OnInit {
     return formatted.join('');
   }
 
+  // Guarda el archivo de imagen seleccionado
+  // para enviarlo junto al mensaje.
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] || null;
@@ -190,6 +214,8 @@ export class GroupsComponent implements OnInit {
     this.selectedImage = file;
   }
 
+  // Envía un mensaje al asistente de IA.
+  // Si hay imagen, también la manda en FormData.
   sendMessage(): void {
     if (!this.userMessage.trim() && !this.selectedImage) {
       return;
@@ -218,16 +244,22 @@ export class GroupsComponent implements OnInit {
     });
   }
 
+  // Activa el modo de edición
+  // para un mensaje específico.
   startEditing(message: ChatMessage): void {
     this.editingMessageId = message._id || null;
     this.editedMessage = message.userMessage;
   }
 
+  // Cancela la edición actual
+  // y limpia el estado temporal.
   cancelEditing(): void {
     this.editingMessageId = null;
     this.editedMessage = '';
   }
 
+  // Guarda los cambios hechos sobre
+  // un mensaje ya existente.
   saveEdit(message: ChatMessage): void {
     if (!message._id) return;
 

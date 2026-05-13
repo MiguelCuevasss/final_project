@@ -1,3 +1,10 @@
+// Rutas principales para manejo de grupos.
+// Este archivo controla:
+// - creación de grupos
+// - obtención de grupos
+// - miembros
+// - mensajes grupales
+
 const express = require('express');
 const router = express.Router();
 
@@ -18,6 +25,10 @@ function toId(value) {
   return '';
 }
 
+
+// Construye respuestas limpias y serializa
+// la información de grupos, miembros y mensajes
+// para enviarla correctamente al frontend.
 function buildUserResponse(user) {
   return {
     id: user._id.toString(),
@@ -97,6 +108,9 @@ async function serializeGroup(group) {
   };
 }
 
+
+// Obtiene todos los grupos donde un usuario
+// participa o fue creador.
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -146,6 +160,9 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+
+// Obtiene la información completa
+// de un grupo específico.
 router.get('/:id', async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
@@ -172,6 +189,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+
+// Crea nuevos grupos y agrega automáticamente
+// al creador como miembro inicial.
 router.post('/', async (req, res) => {
   try {
     const name = (req.body.name || '').trim();
@@ -221,6 +241,9 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+// Agrega nuevos miembros a un grupo
+// usando username o email.
 router.post('/:id/members', async (req, res) => {
   try {
     const { id } = req.params;
@@ -285,6 +308,9 @@ router.post('/:id/members', async (req, res) => {
   }
 });
 
+
+// Guarda mensajes dentro del chat grupal
+// y verifica que el usuario pertenezca al grupo.
 router.post('/:id/messages', async (req, res) => {
   try {
     const { id } = req.params;
@@ -351,4 +377,6 @@ router.post('/:id/messages', async (req, res) => {
   }
 });
 
+// Exporta las rutas de grupos
+// para utilizarlas en el servidor principal.
 module.exports = router;

@@ -1,7 +1,19 @@
+<!--
+Vista del perfil del usuario.
+Permite:
+- visualizar información personal
+- editar nombre, correo y descripción
+- guardar cambios en MongoDB
+-->
+
 <section class="profile-section">
   <div class="profile-shell">
     <div class="profile-card">
+
+      <!-- Encabezado visual del perfil -->
       <div class="profile-header">
+
+        <!-- Ícono decorativo del perfil -->
         <div class="profile-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 21a8 8 0 0 0-16 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -9,20 +21,31 @@
           </svg>
         </div>
 
+        <!-- Información descriptiva -->
         <div>
           <span class="badge">
             <span class="dot"></span>
             Editar perfil
           </span>
+
           <h2>Tu información</h2>
-          <p>Actualiza tu nombre, correo y descripción para que tus amigos te reconozcan mejor.</p>
+
+          <p>
+            Actualiza tu nombre, correo y descripción para que tus amigos te reconozcan mejor.
+          </p>
         </div>
       </div>
 
+      <!-- Formulario principal del perfil -->
       <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
+
+        <!-- Campos del formulario -->
         <div class="form-grid">
+
+          <!-- Campo nombre -->
           <div class="input-group">
             <label>Nombre</label>
+
             <input
               type="text"
               name="name"
@@ -32,8 +55,10 @@
             >
           </div>
 
+          <!-- Campo correo -->
           <div class="input-group">
             <label>Correo electrónico</label>
+
             <input
               type="email"
               name="email"
@@ -43,8 +68,10 @@
             >
           </div>
 
+          <!-- Campo descripción -->
           <div class="input-group full">
             <label>Descripción</label>
+
             <textarea
               name="description"
               [(ngModel)]="profile.description"
@@ -53,10 +80,20 @@
           </div>
         </div>
 
-        <div *ngIf="isLoading" class="info-msg">Cargando perfil...</div>
-        <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
-        <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+        <!-- Estados visuales -->
+        <div *ngIf="isLoading" class="info-msg">
+          Cargando perfil...
+        </div>
 
+        <div *ngIf="errorMessage" class="error-msg">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="success-msg">
+          {{ successMessage }}
+        </div>
+
+        <!-- Botón para guardar cambios -->
         <div class="actions">
           <button
             class="save-btn"

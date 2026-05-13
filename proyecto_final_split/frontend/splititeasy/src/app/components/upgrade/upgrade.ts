@@ -1,3 +1,6 @@
+// Muestra los planes y beneficios premium
+// disponibles dentro de SplitItEasy.
+
 import { Component } from '@angular/core';
 
 @Component({

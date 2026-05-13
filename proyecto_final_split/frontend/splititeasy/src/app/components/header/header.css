@@ -1,3 +1,5 @@
+/* Header principal fijo en la parte superior.
+   Mantiene la navegación visible mientras el usuario hace scroll. */
 .main-header {
   position: sticky;
   top: 0;
@@ -8,6 +10,9 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+
+/* Contenedor interno del header.
+   Centra el contenido y organiza logo, navegación e info del usuario. */
 .header-container {
   width: min(1280px, 92%);
   margin: 0 auto;
@@ -18,6 +23,8 @@
   position: relative;
 }
 
+
+/* Área de marca: logo + nombre de la app. */
 .brand {
   display: flex;
   align-items: center;
@@ -40,6 +47,8 @@
   white-space: nowrap;
 }
 
+
+/* Menú de navegación principal. */
 .nav {
   display: flex;
   align-items: center;
@@ -61,6 +70,8 @@
   color: #38d39f;
 }
 
+
+/* Botón destacado dentro del menú. */
 .nav-cta {
   padding: 0.85rem 1.4rem;
   border-radius: 12px;
@@ -74,6 +85,8 @@
   transform: translateY(-2px);
 }
 
+
+/* Acceso visual al perfil del usuario. */
 .profile-cta {
   width: 44px;
   height: 44px;
@@ -101,6 +114,8 @@
   display: block;
 }
 
+
+/* Información textual del usuario dentro del header. */
 .header-info {
   display: flex;
   flex-direction: column;
@@ -121,6 +136,8 @@
   font-size: 0.8rem;
 }
 
+
+/* Botón hamburguesa para pantallas pequeñas. */
 .menu-toggle {
   display: none;
   background: transparent;
@@ -130,6 +147,8 @@
   cursor: pointer;
 }
 
+
+/* Adaptación responsive para móvil y tablet. */
 @media (max-width: 900px) {
   .header-container {
     min-height: 72px;

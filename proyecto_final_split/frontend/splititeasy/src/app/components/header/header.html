@@ -1,10 +1,23 @@
+<!--
+Header principal de la aplicación.
+Incluye:
+- logo y navegación
+- acceso a páginas principales
+- menú responsive
+- acceso al perfil
+- información del usuario autenticado
+-->
+
 <header class="main-header">
   <div class="header-container">
+
+    <!-- Logo y nombre de la aplicación -->
     <a routerLink="/groups" class="brand" aria-label="Ir al inicio">
       <img src="/logo.png" alt="SplitItEasy logo" class="brand-logo" />
       <span class="brand-name">SplitItEasy</span>
     </a>
 
+    <!-- Botón para menú móvil -->
     <button
       class="menu-toggle"
       type="button"
@@ -13,12 +26,14 @@
       ☰
     </button>
 
+    <!-- Navegación principal -->
     <nav class="nav" [class.nav-open]="isMenuOpen">
       <a routerLink="/groups" (click)="closeMenu()">Inicio</a>
       <a routerLink="/upgrade" (click)="closeMenu()">Upgrade</a>
       <a routerLink="/technologies" (click)="closeMenu()">Tecnologías</a>
       <a routerLink="/login" (click)="closeMenu()">Login</a>
 
+      <!-- Botón principal de registro -->
       <a
         routerLink="/registro"
         class="nav-cta"
@@ -26,6 +41,7 @@
         Empieza gratis
       </a>
 
+      <!-- Acceso rápido al perfil -->
       <a
         routerLink="/perfil"
         class="profile-cta"
@@ -35,6 +51,7 @@
       </a>
     </nav>
 
+    <!-- Información del usuario actual -->
     <div class="header-info">
       <span class="greeting">{{ '' | greeting }}, {{ currentUserName }}</span>
       <span class="date">Hoy es {{ today | date:'fullDate' }}</span>

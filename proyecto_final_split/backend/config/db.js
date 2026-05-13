@@ -1,3 +1,5 @@
+// Este archivo se encarga de conectar el backend con la base de datos MongoDB Atlas usando Mongoose.
+
 const mongoose = require('mongoose');
 
 const connectDB = async () => {

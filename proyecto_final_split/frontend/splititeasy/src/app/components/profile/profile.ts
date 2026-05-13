@@ -1,3 +1,10 @@
+// Componente del perfil de usuario.
+// Se encarga de:
+// - cargar datos del usuario autenticado
+// - mostrar la información en el formulario
+// - guardar cambios del perfil
+// - manejar estados de carga y errores
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +21,8 @@ import { AuthService } from '../../services/auth.service';
   imports: [CommonModule, FormsModule]
 })
 export class ProfileComponent implements OnInit {
+
+  // Información editable del perfil.
   profile: Profile = {
     name: '',
     email: '',
@@ -31,10 +40,14 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) {}
 
+  // Al iniciar el componente,
+  // carga la información del usuario actual.
   ngOnInit(): void {
     this.loadProfile();
   }
 
+  // Obtiene los datos del usuario autenticado
+  // desde AuthService y los carga en el formulario.
   loadProfile(): void {
     this.errorMessage = '';
     this.successMessage = '';
@@ -57,10 +70,13 @@ export class ProfileComponent implements OnInit {
     this.isLoading = false;
   }
 
+  // Guarda los cambios del perfil
+  // enviando la información al backend.
   saveProfile(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
+    // Validaciones básicas del formulario.
     if (!this.profile.name.trim()) {
       this.errorMessage = 'El nombre es obligatorio';
       return;
@@ -77,6 +93,9 @@ export class ProfileComponent implements OnInit {
       .saveProfile(this.profile)
       .pipe(finalize(() => (this.isSaving = false)))
       .subscribe({
+
+        // Si el guardado fue exitoso,
+        // actualiza los datos y redirige.
         next: (response) => {
           if (response?.success === false) {
             this.errorMessage = response?.message || 'No se pudo guardar el perfil';
@@ -97,6 +116,8 @@ export class ProfileComponent implements OnInit {
             this.router.navigate(['/groups']);
           }, 1200);
         },
+
+        // Manejo de errores del backend.
         error: (error) => {
           this.errorMessage =
             error?.error?.message ||

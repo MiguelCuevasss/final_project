@@ -1,3 +1,8 @@
+// Componente de login y registro.
+// Maneja el cambio entre ambos modos,
+// envía los datos al AuthService
+// y redirige según el resultado.
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +22,8 @@ export class LoginComponent {
   errorMessage: string = '';
   successMessage: string = '';
 
+  // Objeto con los datos del formulario
+  // tanto para login como para registro.
   formData = {
     name: '',
     lastname: '',
@@ -32,6 +39,8 @@ export class LoginComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    // Detecta si la ruta actual es /login o /registro
+    // para mostrar el formulario correspondiente.
     this.route.url.subscribe(segments => {
       this.isLogin = segments[0]?.path !== 'registro';
       this.errorMessage = '';
@@ -39,6 +48,8 @@ export class LoginComponent {
     });
   }
 
+  // Valida que la contraseña y su confirmación
+  // coincidan en modo registro.
   passwordsDoNotMatch(): boolean {
     return (
       !this.isLogin &&
@@ -47,10 +58,15 @@ export class LoginComponent {
     );
   }
 
+  // Cambia entre login y registro
+  // navegando a la ruta opuesta.
   toggleMode() {
     this.router.navigate([this.isLogin ? '/registro' : '/login']);
   }
 
+  // Envía el formulario.
+  // Si es registro, crea un usuario nuevo.
+  // Si es login, valida credenciales.
   submitForm(event: Event) {
     event.preventDefault();
 

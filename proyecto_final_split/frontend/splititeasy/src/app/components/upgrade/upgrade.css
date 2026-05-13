@@ -1,3 +1,6 @@
+/* Sección principal de planes y precios
+   de la aplicación SplitItEasy. */
+
 .pricing-section {
   min-height: calc(100vh - 96px);
   background: radial-gradient(circle at top, #031826, #020c1b);
@@ -6,9 +9,15 @@
   justify-content: center;
 }
 
+
+/* Contenedor general de la sección pricing. */
+
 .pricing-container {
   width: min(1200px, 90%);
 }
+
+
+/* Encabezado principal de la sección. */
 
 .pricing-header {
   text-align: center;
@@ -26,11 +35,17 @@
   font-size: 18px;
 }
 
+
+/* Grid principal de planes disponibles. */
+
 .plans {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
+
+
+/* Tarjetas individuales de cada plan. */
 
 .plan-card {
   position: relative;
@@ -51,11 +66,17 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
+
+/* Estilo especial para el plan destacado. */
+
 .featured {
   border-color: #38d39f;
   box-shadow: 0 0 0 1px rgba(56, 211, 159, 0.12), 0 24px 60px rgba(0, 0, 0, 0.55);
   transform: scale(1.03);
 }
+
+
+/* Etiquetas visuales de planes. */
 
 .plan-tag {
   display: inline-flex;
@@ -81,6 +102,10 @@
   padding: 7px 12px;
   border-radius: 999px;
 }
+
+
+/* Información principal del plan:
+   nombre, precio y descripción. */
 
 .plan-card h3 {
   color: #ffffff;
@@ -109,6 +134,10 @@
   margin-bottom: 20px;
 }
 
+
+/* Lista de beneficios incluidos
+   dentro de cada plan. */
+
 .plan-list {
   list-style: none;
   padding: 0;
@@ -133,6 +162,10 @@
   font-size: 18px;
   line-height: 1;
 }
+
+
+/* Botón principal de contratación
+   o acceso al plan. */
 
 .plan-btn {
   display: flex;
@@ -160,6 +193,10 @@
   filter: brightness(1.05);
   box-shadow: 0 12px 24px rgba(46, 204, 113, 0.22);
 }
+
+
+/* Adaptación responsive para tablets
+   y pantallas pequeñas. */
 
 @media (max-width: 1000px) {
   .plans {

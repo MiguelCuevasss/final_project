@@ -1,9 +1,22 @@
+<!--
+Vista principal de main features de la app, es decir grupos y asistente IA.
+Incluye:
+- creación de grupos
+- navegación entre grupos
+- chat con IA
+- historial de mensajes
+- subida de imágenes
+- sugerencias de usuarios
+-->
+
 <section class="groups-section">
   <div class="groups-shell">
 
-    <!-- SIDEBAR -->
+    <!-- Sidebar lateral de grupos -->
     <aside class="groups-sidebar">
       <div class="sidebar-top">
+
+        <!-- Badge decorativo -->
         <span class="badge">
           <span class="dot"></span>
           Grupos
@@ -11,6 +24,7 @@
 
         <h2>Crear grupo</h2>
 
+        <!-- Formulario para crear nuevos grupos -->
         <div class="create-box">
           <input
             type="text"
@@ -25,6 +39,7 @@
         </div>
       </div>
 
+      <!-- Mensajes de error y éxito -->
       <div *ngIf="errorMessage" class="error-msg">
         {{ errorMessage }}
       </div>
@@ -33,6 +48,7 @@
         {{ successMessage }}
       </div>
 
+      <!-- Lista de grupos del usuario -->
       <div class="sidebar-list">
         <a
           class="group-item"
@@ -52,11 +68,14 @@
       </div>
     </aside>
 
-    <!-- CHAT -->
+    <!-- Área principal del chatbot -->
     <section class="chatbot-section">
       <div class="chatbot-container">
 
+        <!-- Tarjeta principal del chat IA -->
         <div class="chatbot-card">
+
+          <!-- Encabezado del asistente -->
           <div class="chat-header">
             <div class="chat-avatar-wrap">
               <img src="/coin.png" alt="AI coin" class="chat-avatar" />
@@ -70,12 +89,15 @@
             </div>
           </div>
 
+          <!-- Historial de conversaciones -->
           <div class="chat-history">
             <div class="message-block" *ngFor="let msg of messages">
 
-              <!-- USER -->
+              <!-- Mensajes enviados por el usuario -->
               <div class="message-row user-row">
                 <div class="message-card user-card">
+
+                  <!-- Encabezado del mensaje -->
                   <div class="message-top">
                     <div class="message-user">
                       <div class="message-icon user-icon">
@@ -94,11 +116,13 @@
                     </span>
                   </div>
 
+                  <!-- Vista normal del mensaje -->
                   <div *ngIf="editingMessageId !== msg._id; else editMode">
                     <div class="message-content user-content">
                       {{ msg.userMessage }}
                     </div>
 
+                    <!-- Botón para editar mensaje -->
                     <button
                       class="edit-btn"
                       type="button"
@@ -109,6 +133,7 @@
                     </button>
                   </div>
 
+                  <!-- Vista de edición -->
                   <ng-template #editMode>
                     <input
                       type="text"
@@ -137,9 +162,11 @@
                 </div>
               </div>
 
-              <!-- AI -->
+              <!-- Respuestas generadas por la IA -->
               <div class="message-row ai-row">
                 <div class="message-card ai-card">
+
+                  <!-- Encabezado de respuesta IA -->
                   <div class="message-top">
                     <div class="message-user ai-user">
                       <div class="message-icon ai-icon">
@@ -153,6 +180,7 @@
                     </span>
                   </div>
 
+                  <!-- Respuesta formateada de la IA -->
                   <div
                     class="message-content ai-content"
                     [innerHTML]="formatAiResponse(msg.aiResponse)"
@@ -162,21 +190,30 @@
             </div>
           </div>
 
+          <!-- Área para subir imágenes -->
           <div class="image-upload">
             <label class="upload-box">
               <input
+                #fileInput
                 type="file"
                 accept="image/*"
                 (change)="onImageSelected($event)"
+                hidden
               />
-              <span class="upload-icon">📎</span>
-              <span class="upload-text">Seleccionar archivo</span>
+              <button
+                type="button"
+                class="custom-upload-btn"
+                (click)="fileInput.click()"
+              >
+                📎 Seleccionar archivo
+              </button>
               <span class="upload-file">
                 {{ selectedImage ? selectedImage.name : 'Sin archivos seleccionados' }}
               </span>
             </label>
           </div>
 
+          <!-- Input principal del chatbot -->
           <div class="chat-input-row">
             <input
               type="text"
@@ -199,8 +236,10 @@
           </div>
         </div>
 
-        <!-- SUGGESTIONS -->
+        <!-- Panel de sugerencias -->
         <div class="suggestions-card">
+
+          <!-- Encabezado de sugerencias -->
           <div class="suggestions-header">
             <div>
               <span class="suggestions-badge">Sugerencias</span>
@@ -213,6 +252,7 @@
             </button>
           </div>
 
+          <!-- Lista de usuarios sugeridos -->
           <div class="suggestions-list">
             <article
               class="suggestion-item"

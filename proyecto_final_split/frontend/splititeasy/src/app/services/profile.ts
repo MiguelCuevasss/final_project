@@ -1,7 +1,15 @@
+// Servicio encargado del manejo del perfil.
+// Permite:
+// - obtener información del usuario actual
+// - leer datos almacenados en sesión/localStorage
+// - guardar cambios del perfil en el backend
+
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AuthService, CurrentUser } from './auth.service';
 
+
+// Estructura del perfil editable.
 export interface Profile {
   name: string;
   email: string;
@@ -12,10 +20,14 @@ export interface Profile {
   providedIn: 'root'
 })
 export class ProfileService {
+
   constructor(private authService: AuthService) {}
 
+  // Obtiene el usuario almacenado actualmente,
+  // ya sea desde AuthService o localStorage.
   private getStoredUser(): CurrentUser | null {
     const current = this.authService.getCurrentUser();
+
     if (current?.id) {
       return current;
     }
@@ -25,6 +37,7 @@ export class ProfileService {
     }
 
     const raw = localStorage.getItem('currentUser');
+
     if (!raw) {
       return null;
     }
@@ -32,6 +45,7 @@ export class ProfileService {
     try {
       const parsed = JSON.parse(raw);
       const id = parsed?.id || parsed?._id || '';
+
       if (!id) return null;
 
       return {
@@ -48,6 +62,8 @@ export class ProfileService {
     }
   }
 
+  // Obtiene la información del perfil
+  // para mostrarla en el formulario.
   getProfile(): Observable<Profile> {
     const user = this.getStoredUser();
 
@@ -66,6 +82,8 @@ export class ProfileService {
     });
   }
 
+  // Guarda cambios del perfil
+  // utilizando AuthService y el backend.
   saveProfile(profile: Profile): Observable<any> {
     const user = this.getStoredUser();
 

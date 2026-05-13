@@ -1,7 +1,13 @@
+// Este archivo define las rutas de autenticación
+// y perfil de usuario del backend.
+
 const express = require('express');
 const router = express.Router();
 
 const User = require('../models/User');
+
+// Función auxiliar que construye un objeto seguro
+// del usuario para enviar al frontend.
 
 const buildUserResponse = (user) => ({
   id: user._id.toString(),
@@ -11,6 +17,8 @@ const buildUserResponse = (user) => ({
   email: user.email,
   description: user.description || ''
 });
+
+// Ruta para registrar nuevos usuarios.
 
 router.post('/register', async (req, res) => {
   try {
@@ -111,6 +119,9 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Ruta para obtener la información
+// de un usuario usando su ID.
+
 router.get('/me/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -134,6 +145,8 @@ router.get('/me/:id', async (req, res) => {
     });
   }
 });
+
+// Ruta para actualizar información del perfil.
 
 router.put('/profile/:id', async (req, res) => {
   try {
@@ -191,4 +204,6 @@ router.put('/profile/:id', async (req, res) => {
   }
 });
 
+// Exporta el router para que pueda ser utilizado
+// por index.js y conectado al servidor principal.
 module.exports = router;
