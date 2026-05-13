@@ -38,6 +38,7 @@
           class="group-item"
           *ngFor="let group of groups"
           [routerLink]="['/groups', group.id]"
+          [state]="{ group: group }"
         >
           <div class="group-avatar">
             {{ group.name.charAt(0) | uppercase }}

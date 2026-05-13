@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { catchError, map, of, timeout } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { GroupsService, Group } from '../../services/groups';
 import { AuthService } from '../../services/auth.service';
@@ -41,52 +41,58 @@ export class GroupDetailComponent implements OnInit {
     this.currentUserName = currentUser?.name || 'Usuario';
 
     this.groupId = this.route.snapshot.paramMap.get('id') || '';
+
+    const nav = history.state?.group as Group | undefined;
+    if (nav && String(nav.id) === String(this.groupId)) {
+      this.group = nav;
+      this.isLoading = false;
+      return;
+    }
+
     this.loadGroup();
   }
 
   loadGroup(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.isLoading = true;
+
     if (!this.groupId) {
       this.group = null;
       this.errorMessage = 'No se encontró el grupo';
+      this.isLoading = false;
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+    if (!this.currentUserId) {
+      this.group = null;
+      this.errorMessage = 'No hay usuario autenticado';
+      this.isLoading = false;
+      return;
+    }
 
     this.groupsService
-      .getGroupById(this.groupId)
-      .pipe(
-        timeout(5000),
-        map((response: any) => response?.group || null),
-        catchError(() => {
-          if (!this.currentUserId) {
-            return of(null);
-          }
-
-          return this.groupsService.getGroups(this.currentUserId).pipe(
-            map((response: any) => {
-              const groups: Group[] = response?.groups || [];
-              return groups.find((g) => String(g.id) === String(this.groupId)) || null;
-            }),
-            catchError(() => of(null))
-          );
-        })
-      )
+      .getGroups(this.currentUserId)
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
-        next: (group: Group | null) => {
-          this.group = group;
-          this.isLoading = false;
+        next: (response: any) => {
+          const groups: Group[] = response?.groups || [];
+          const found = groups.find(
+            (g) => String(g.id) === String(this.groupId)
+          );
 
-          if (!group) {
+          if (!found) {
+            this.group = null;
             this.errorMessage = 'No se encontró el grupo';
+            return;
           }
+
+          this.group = found;
         },
-        error: () => {
+        error: (error: any) => {
           this.group = null;
-          this.errorMessage = 'No se pudo cargar el grupo';
-          this.isLoading = false;
+          this.errorMessage =
+            error?.error?.message || 'No se pudo cargar el grupo';
         }
       });
   }
