@@ -1,5 +1,5 @@
-<section class="group-detail-section" *ngIf="group; else noGroup">
-  <div class="group-detail-shell">
+<section class="group-detail-section" *ngIf="!isLoading; else loadingTpl">
+  <div class="group-detail-shell" *ngIf="group; else noGroup">
     <div class="detail-header">
       <div class="title-block">
         <div class="avatar">
@@ -65,7 +65,7 @@
           <h3>Miembros</h3>
           <div class="members">
             <span class="pill" *ngFor="let member of group.members">
-              @{{ member.username || member.name }}
+              @{{ member.username }}
             </span>
           </div>
         </div>
@@ -80,6 +80,16 @@
       <div class="empty-view">
         <h2>No se encontró el grupo</h2>
         <a routerLink="/groups">Volver</a>
+      </div>
+    </div>
+  </section>
+</ng-template>
+
+<ng-template #loadingTpl>
+  <section class="group-detail-section">
+    <div class="group-detail-shell">
+      <div class="empty-view">
+        <h2>Cargando grupo...</h2>
       </div>
     </div>
   </section>

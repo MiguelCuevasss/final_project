@@ -4,17 +4,6 @@ const router = express.Router();
 const User = require('../models/User');
 const Group = require('../models/Group');
 
-function buildUserResponse(user) {
-  return {
-    id: user._id.toString(),
-    name: user.name,
-    lastname: user.lastname,
-    username: user.username,
-    email: user.email,
-    description: user.description || ''
-  };
-}
-
 function buildMessageResponse(message) {
   const author = message.authorId || {};
 
@@ -28,10 +17,7 @@ function buildMessageResponse(message) {
 }
 
 function buildGroupResponse(group) {
-  const createdBy =
-    group.createdBy && group.createdBy._id
-      ? group.createdBy
-      : null;
+  const createdBy = group.createdBy && group.createdBy._id ? group.createdBy : null;
 
   return {
     id: group._id.toString(),
@@ -65,7 +51,21 @@ router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await User.findById(userId);
+    let user = null;
+
+    if (userId.match(/^[0-9a-fA-F]{24}$/)) {
+      user = await User.findById(userId);
+    }
+
+    if (!user) {
+      user = await User.findOne({
+        $or: [
+          { username: userId.toLowerCase() },
+          { email: userId.toLowerCase() }
+        ]
+      });
+    }
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -75,8 +75,8 @@ router.get('/user/:userId', async (req, res) => {
 
     const groups = await Group.find({
       $or: [
-        { createdBy: userId },
-        { 'members.user': userId }
+        { createdBy: user._id },
+        { 'members.user': user._id }
       ]
     })
       .sort({ updatedAt: -1 })

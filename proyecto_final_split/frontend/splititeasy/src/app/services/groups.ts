@@ -1,102 +1,66 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface GroupMember {
+  id: string;
+  name: string;
+  lastname: string;
+  username: string;
+  email: string;
+}
 
 export interface GroupMessage {
-  id: number;
-  author: string;
+  id: string;
+  authorId: string;
+  authorName: string;
   text: string;
-  date: string;
+  createdAt: string;
 }
 
 export interface Group {
-  id: number;
+  id: string;
   name: string;
-  members: string[];
+  createdById: string;
+  members: GroupMember[];
   messages: GroupMessage[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupsService {
-  private storageKey = 'groups';
-  private groups: Group[] = [];
+  private apiUrl = 'https://splititeasy-backend.onrender.com/api/groups';
 
-  constructor() {
-    const data = localStorage.getItem(this.storageKey);
-    this.groups = data ? JSON.parse(data) : [];
+  constructor(private http: HttpClient) {}
+
+  getGroups(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/${userId}`);
   }
 
-  private save() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.groups));
+  getGroupById(groupId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${groupId}`);
   }
 
-  private nextGroupId() {
-    return this.groups.length > 0
-      ? Math.max(...this.groups.map(g => g.id)) + 1
-      : 1;
+  createGroup(name: string, createdById: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, {
+      name,
+      createdById
+    });
   }
 
-  private nextMessageId(messages: GroupMessage[]) {
-    return messages.length > 0
-      ? Math.max(...messages.map(m => m.id)) + 1
-      : 1;
+  addMember(groupId: string, identifier: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${groupId}/members`, {
+      identifier
+    });
   }
 
-  getGroups() {
-    return this.groups;
-  }
-
-  getGroupById(id: number) {
-    return this.groups.find(g => g.id === id);
-  }
-
-  createGroup(name: string, owner: string) {
-    const group: Group = {
-      id: this.nextGroupId(),
-      name: name.trim(),
-      members: [owner],
-      messages: []
-    };
-
-    this.groups.unshift(group);
-    this.save();
-    return group;
-  }
-
-  addMember(groupId: number, memberName: string) {
-    const group = this.getGroupById(groupId);
-    if (!group) return false;
-
-    const cleanMember = memberName.trim();
-    if (!cleanMember) return false;
-
-    const exists = group.members.some(
-      m => m.toLowerCase() === cleanMember.toLowerCase()
-    );
-
-    if (exists) return false;
-
-    group.members.push(cleanMember);
-    this.save();
-    return true;
-  }
-
-  addMessage(groupId: number, author: string, text: string) {
-    const group = this.getGroupById(groupId);
-    if (!group) return false;
-
-    const cleanText = text.trim();
-    if (!cleanText) return false;
-
-    const message: GroupMessage = {
-      id: this.nextMessageId(group.messages),
-      author: author.trim() || 'Usuario',
-      text: cleanText,
-      date: new Date().toISOString()
-    };
-
-    group.messages.push(message);
-    this.save();
-    return true;
+  addMessage(groupId: string, authorId: string, text: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${groupId}/messages`, {
+      authorId,
+      text
+    });
   }
 }

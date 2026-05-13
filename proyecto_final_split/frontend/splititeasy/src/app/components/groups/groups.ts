@@ -92,10 +92,10 @@ export class GroupsComponent implements OnInit {
     }
 
     this.groupsService.getGroups(this.currentUserId).subscribe({
-      next: (response) => {
-        this.groups = response.groups || [];
+      next: (response: any) => {
+        this.groups = response?.groups || [];
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error?.error?.message || 'No se pudieron cargar los grupos';
       }
     });
@@ -118,12 +118,12 @@ export class GroupsComponent implements OnInit {
     }
 
     this.groupsService.createGroup(name, this.currentUserId).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.newGroupName = '';
-        this.successMessage = response.message || 'Grupo creado correctamente';
+        this.successMessage = response?.message || 'Grupo creado correctamente';
         this.loadGroups();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error?.error?.message || 'No se pudo crear el grupo';
       }
     });
@@ -233,7 +233,7 @@ export class GroupsComponent implements OnInit {
 
     this.chatService.updateMessage(message._id, this.editedMessage).subscribe({
       next: (updatedMessage) => {
-        const index = this.messages.findIndex(m => m._id === updatedMessage._id);
+        const index = this.messages.findIndex((m) => m._id === updatedMessage._id);
 
         if (index !== -1) {
           this.messages[index] = updatedMessage;

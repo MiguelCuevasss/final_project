@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+
 import { GroupsService, Group } from '../../services/groups';
 import { AuthService } from '../../services/auth.service';
 
@@ -18,9 +19,14 @@ export class GroupDetailComponent implements OnInit {
 
   newMemberIdentifier = '';
   newMessage = '';
+
   errorMessage = '';
   successMessage = '';
+
   currentUserId = '';
+  currentUserName = 'Usuario';
+
+  isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +37,7 @@ export class GroupDetailComponent implements OnInit {
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
     this.currentUserId = currentUser?.id || '';
+    this.currentUserName = currentUser?.name || 'Usuario';
 
     this.groupId = this.route.snapshot.paramMap.get('id') || '';
     this.loadGroup();
@@ -39,23 +46,44 @@ export class GroupDetailComponent implements OnInit {
   loadGroup(): void {
     if (!this.groupId) {
       this.group = null;
+      this.errorMessage = 'No se encontró el grupo';
       return;
     }
 
-    this.groupsService.getGroupById(this.groupId).subscribe({
-      next: (response) => {
-        this.group = response.group;
+    if (!this.currentUserId) {
+      this.group = null;
+      this.errorMessage = 'No hay usuario autenticado';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.groupsService.getGroups(this.currentUserId).subscribe({
+      next: (response: any) => {
+        const groups: Group[] = response?.groups || [];
+        const found = groups.find((g) => String(g.id) === String(this.groupId));
+
+        if (!found) {
+          this.group = null;
+          this.errorMessage = 'No se encontró el grupo';
+        } else {
+          this.group = found;
+        }
+
+        this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.group = null;
-        this.errorMessage = error?.error?.message || 'No se pudo cargar el grupo';
+        this.errorMessage =
+          error?.error?.message || 'No se pudo cargar el grupo';
+        this.isLoading = false;
       }
     });
   }
 
   addMember(): void {
-    if (!this.groupId) return;
-
     this.errorMessage = '';
     this.successMessage = '';
 
@@ -67,27 +95,26 @@ export class GroupDetailComponent implements OnInit {
     }
 
     this.groupsService.addMember(this.groupId, identifier).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.group = response.group;
         this.newMemberIdentifier = '';
-        this.successMessage = response.message || 'Persona agregada correctamente';
+        this.successMessage = response.message || 'Miembro agregado correctamente';
       },
-      error: (error) => {
-        this.errorMessage = error?.error?.message || 'No se pudo agregar la persona';
+      error: (error: any) => {
+        this.errorMessage =
+          error?.error?.message || 'No se pudo agregar el miembro';
       }
     });
   }
 
   sendMessage(): void {
-    if (!this.groupId) return;
-
     this.errorMessage = '';
     this.successMessage = '';
 
     const text = this.newMessage.trim();
 
     if (!text) {
-      this.errorMessage = 'Escribe un mensaje válido';
+      this.errorMessage = 'Escribe un mensaje';
       return;
     }
 
@@ -97,13 +124,14 @@ export class GroupDetailComponent implements OnInit {
     }
 
     this.groupsService.addMessage(this.groupId, this.currentUserId, text).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.group = response.group;
         this.newMessage = '';
         this.successMessage = response.message || 'Mensaje enviado';
       },
-      error: (error) => {
-        this.errorMessage = error?.error?.message || 'No se pudo enviar el mensaje';
+      error: (error: any) => {
+        this.errorMessage =
+          error?.error?.message || 'No se pudo enviar el mensaje';
       }
     });
   }
