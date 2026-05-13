@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { catchError, map, of, timeout } from 'rxjs';
 
 import { GroupsService, Group } from '../../services/groups';
 import { AuthService } from '../../services/auth.service';
@@ -50,37 +51,44 @@ export class GroupDetailComponent implements OnInit {
       return;
     }
 
-    if (!this.currentUserId) {
-      this.group = null;
-      this.errorMessage = 'No hay usuario autenticado';
-      return;
-    }
-
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.groupsService.getGroups(this.currentUserId).subscribe({
-      next: (response: any) => {
-        const groups: Group[] = response?.groups || [];
-        const found = groups.find((g) => String(g.id) === String(this.groupId));
+    this.groupsService
+      .getGroupById(this.groupId)
+      .pipe(
+        timeout(5000),
+        map((response: any) => response?.group || null),
+        catchError(() => {
+          if (!this.currentUserId) {
+            return of(null);
+          }
 
-        if (!found) {
+          return this.groupsService.getGroups(this.currentUserId).pipe(
+            map((response: any) => {
+              const groups: Group[] = response?.groups || [];
+              return groups.find((g) => String(g.id) === String(this.groupId)) || null;
+            }),
+            catchError(() => of(null))
+          );
+        })
+      )
+      .subscribe({
+        next: (group: Group | null) => {
+          this.group = group;
+          this.isLoading = false;
+
+          if (!group) {
+            this.errorMessage = 'No se encontró el grupo';
+          }
+        },
+        error: () => {
           this.group = null;
-          this.errorMessage = 'No se encontró el grupo';
-        } else {
-          this.group = found;
+          this.errorMessage = 'No se pudo cargar el grupo';
+          this.isLoading = false;
         }
-
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        this.group = null;
-        this.errorMessage =
-          error?.error?.message || 'No se pudo cargar el grupo';
-        this.isLoading = false;
-      }
-    });
+      });
   }
 
   addMember(): void {

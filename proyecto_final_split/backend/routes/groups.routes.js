@@ -4,47 +4,97 @@ const router = express.Router();
 const User = require('../models/User');
 const Group = require('../models/Group');
 
-function buildMessageResponse(message) {
-  const author = message.authorId || {};
+function isObjectId(value) {
+  return typeof value === 'string' && /^[0-9a-fA-F]{24}$/.test(value);
+}
 
+function toId(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (value._id) return value._id.toString();
+  if (value.id) return value.id.toString();
+  if (value.user) return toId(value.user);
+  if (value.authorId) return toId(value.authorId);
+  return '';
+}
+
+function buildUserResponse(user) {
   return {
-    id: message._id.toString(),
-    authorId: author._id ? author._id.toString() : String(message.authorId || ''),
-    authorName: message.authorName || author.name || 'Usuario',
-    text: message.text,
-    createdAt: message.createdAt
+    id: user._id.toString(),
+    name: user.name || '',
+    lastname: user.lastname || '',
+    username: user.username || '',
+    email: user.email || '',
+    description: user.description || ''
   };
 }
 
-function buildGroupResponse(group) {
-  const createdBy = group.createdBy && group.createdBy._id ? group.createdBy : null;
+async function serializeGroup(group) {
+  const rawMembers = Array.isArray(group.members) ? group.members : [];
+  const rawMessages = Array.isArray(group.messages) ? group.messages : [];
+
+  const memberIds = [
+    ...new Set(
+      rawMembers
+        .map((member) => toId(member.user || member))
+        .filter(Boolean)
+    )
+  ];
+
+  const authorIds = [
+    ...new Set(
+      rawMessages
+        .map((message) => toId(message.authorId))
+        .filter(Boolean)
+    )
+  ];
+
+  const [memberUsers, authorUsers, creatorUser] = await Promise.all([
+    memberIds.length
+      ? User.find({ _id: { $in: memberIds.filter(isObjectId) } }).select('name lastname username email description')
+      : [],
+    authorIds.length
+      ? User.find({ _id: { $in: authorIds.filter(isObjectId) } }).select('name lastname username email description')
+      : [],
+    group.createdBy && isObjectId(toId(group.createdBy))
+      ? User.findById(toId(group.createdBy)).select('name lastname username email description')
+      : null
+  ]);
+
+  const memberMap = new Map(memberUsers.map((u) => [u._id.toString(), u]));
+  const authorMap = new Map(authorUsers.map((u) => [u._id.toString(), u]));
 
   return {
     id: group._id.toString(),
-    name: group.name,
-    createdById: createdBy ? createdBy._id.toString() : String(group.createdBy || ''),
-    members: (group.members || []).map((member) => {
-      const user = member.user || {};
+    name: group.name || '',
+    createdById: creatorUser ? creatorUser._id.toString() : toId(group.createdBy),
+    members: rawMembers.map((member) => {
+      const memberId = toId(member.user || member);
+      const user = memberMap.get(memberId);
+
       return {
-        id: user._id ? user._id.toString() : String(member.user || ''),
-        name: user.name || '',
-        lastname: user.lastname || '',
-        username: user.username || '',
-        email: user.email || ''
+        id: memberId,
+        name: user?.name || '',
+        lastname: user?.lastname || '',
+        username: user?.username || '',
+        email: user?.email || ''
       };
     }),
-    messages: (group.messages || []).map(buildMessageResponse),
+    messages: rawMessages.map((message) => {
+      const authorId = toId(message.authorId);
+      const author = authorMap.get(authorId);
+
+      return {
+        id: toId(message._id) || authorId || String(Date.now()),
+        authorId,
+        authorName: message.authorName || author?.name || 'Usuario',
+        text: message.text || '',
+        createdAt: message.createdAt || message.date || new Date()
+      };
+    }),
     createdAt: group.createdAt,
     updatedAt: group.updatedAt
   };
-}
-
-async function populateGroup(group) {
-  return group.populate([
-    { path: 'createdBy', select: 'name lastname username email description' },
-    { path: 'members.user', select: 'name lastname username email description' },
-    { path: 'messages.authorId', select: 'name lastname username email description' }
-  ]);
 }
 
 router.get('/user/:userId', async (req, res) => {
@@ -53,15 +103,16 @@ router.get('/user/:userId', async (req, res) => {
 
     let user = null;
 
-    if (userId.match(/^[0-9a-fA-F]{24}$/)) {
+    if (isObjectId(userId)) {
       user = await User.findById(userId);
     }
 
     if (!user) {
+      const normalized = userId.trim().toLowerCase();
       user = await User.findOne({
         $or: [
-          { username: userId.toLowerCase() },
-          { email: userId.toLowerCase() }
+          { username: normalized },
+          { email: normalized }
         ]
       });
     }
@@ -78,20 +129,16 @@ router.get('/user/:userId', async (req, res) => {
         { createdBy: user._id },
         { 'members.user': user._id }
       ]
-    })
-      .sort({ updatedAt: -1 })
-      .populate([
-        { path: 'createdBy', select: 'name lastname username email description' },
-        { path: 'members.user', select: 'name lastname username email description' },
-        { path: 'messages.authorId', select: 'name lastname username email description' }
-      ]);
+    }).sort({ updatedAt: -1 });
+
+    const serializedGroups = await Promise.all(groups.map(serializeGroup));
 
     return res.json({
       success: true,
-      groups: groups.map(buildGroupResponse)
+      groups: serializedGroups
     });
   } catch (error) {
-    console.error(error);
+    console.error('GET /api/groups/user/:userId', error);
     return res.status(500).json({
       success: false,
       message: 'Error del servidor'
@@ -101,11 +148,7 @@ router.get('/user/:userId', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id).populate([
-      { path: 'createdBy', select: 'name lastname username email description' },
-      { path: 'members.user', select: 'name lastname username email description' },
-      { path: 'messages.authorId', select: 'name lastname username email description' }
-    ]);
+    const group = await Group.findById(req.params.id);
 
     if (!group) {
       return res.status(404).json({
@@ -114,12 +157,14 @@ router.get('/:id', async (req, res) => {
       });
     }
 
+    const serializedGroup = await serializeGroup(group);
+
     return res.json({
       success: true,
-      group: buildGroupResponse(group)
+      group: serializedGroup
     });
   } catch (error) {
-    console.error(error);
+    console.error('GET /api/groups/:id', error);
     return res.status(500).json({
       success: false,
       message: 'Error del servidor'
@@ -159,15 +204,16 @@ router.post('/', async (req, res) => {
     });
 
     await group.save();
-    await populateGroup(group);
+
+    const serializedGroup = await serializeGroup(group);
 
     return res.status(201).json({
       success: true,
       message: 'Grupo creado correctamente',
-      group: buildGroupResponse(group)
+      group: serializedGroup
     });
   } catch (error) {
-    console.error(error);
+    console.error('POST /api/groups', error);
     return res.status(500).json({
       success: false,
       message: 'Error del servidor'
@@ -209,9 +255,9 @@ router.post('/:id/members', async (req, res) => {
       });
     }
 
-    const alreadyMember = group.members.some(
-      (member) => member.user.toString() === user._id.toString()
-    );
+    const alreadyMember = (group.members || []).some((member) => {
+      return toId(member.user || member) === user._id.toString();
+    });
 
     if (alreadyMember) {
       return res.status(400).json({
@@ -222,15 +268,16 @@ router.post('/:id/members', async (req, res) => {
 
     group.members.push({ user: user._id });
     await group.save();
-    await populateGroup(group);
+
+    const serializedGroup = await serializeGroup(group);
 
     return res.json({
       success: true,
       message: 'Miembro agregado correctamente',
-      group: buildGroupResponse(group)
+      group: serializedGroup
     });
   } catch (error) {
-    console.error(error);
+    console.error('POST /api/groups/:id/members', error);
     return res.status(500).json({
       success: false,
       message: 'Error del servidor'
@@ -268,8 +315,10 @@ router.post('/:id/messages', async (req, res) => {
     }
 
     const isMember =
-      group.createdBy.toString() === author._id.toString() ||
-      group.members.some((member) => member.user.toString() === author._id.toString());
+      toId(group.createdBy) === author._id.toString() ||
+      (group.members || []).some((member) => {
+        return toId(member.user || member) === author._id.toString();
+      });
 
     if (!isMember) {
       return res.status(403).json({
@@ -285,15 +334,16 @@ router.post('/:id/messages', async (req, res) => {
     });
 
     await group.save();
-    await populateGroup(group);
+
+    const serializedGroup = await serializeGroup(group);
 
     return res.json({
       success: true,
       message: 'Mensaje guardado',
-      group: buildGroupResponse(group)
+      group: serializedGroup
     });
   } catch (error) {
-    console.error(error);
+    console.error('POST /api/groups/:id/messages', error);
     return res.status(500).json({
       success: false,
       message: 'Error del servidor'
