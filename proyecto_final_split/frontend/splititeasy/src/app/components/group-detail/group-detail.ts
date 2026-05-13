@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { GroupsService, Group } from '../../services/groups';
 import { AuthService } from '../../services/auth.service';
@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
-export class GroupDetailComponent implements OnInit {
+export class GroupDetailComponent implements OnInit, OnDestroy {
   groupId = '';
   group: Group | null = null;
 
@@ -29,6 +29,8 @@ export class GroupDetailComponent implements OnInit {
 
   isLoading = false;
 
+  private refreshSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private groupsService: GroupsService,
@@ -42,59 +44,49 @@ export class GroupDetailComponent implements OnInit {
 
     this.groupId = this.route.snapshot.paramMap.get('id') || '';
 
-    const nav = history.state?.group as Group | undefined;
-    if (nav && String(nav.id) === String(this.groupId)) {
-      this.group = nav;
-      this.isLoading = false;
-      return;
-    }
-
     this.loadGroup();
+    this.startAutoRefresh();
   }
 
-  loadGroup(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.isLoading = true;
+  ngOnDestroy(): void {
+    this.refreshSub?.unsubscribe();
+  }
 
-    if (!this.groupId) {
-      this.group = null;
-      this.errorMessage = 'No se encontró el grupo';
-      this.isLoading = false;
-      return;
+  startAutoRefresh(): void {
+    this.refreshSub = timer(4000, 4000).subscribe(() => {
+      if (this.groupId && this.currentUserId) {
+        this.loadGroup(false);
+      }
+    });
+  }
+
+  loadGroup(showLoading = true): void {
+    if (showLoading) {
+      this.isLoading = true;
     }
 
-    if (!this.currentUserId) {
-      this.group = null;
-      this.errorMessage = 'No hay usuario autenticado';
-      this.isLoading = false;
-      return;
-    }
+    this.groupsService.getGroups(this.currentUserId).subscribe({
+      next: (response: any) => {
+        const groups: Group[] = response?.groups || [];
+        const found = groups.find((g) => String(g.id) === String(this.groupId)) || null;
 
-    this.groupsService
-      .getGroups(this.currentUserId)
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe({
-        next: (response: any) => {
-          const groups: Group[] = response?.groups || [];
-          const found = groups.find(
-            (g) => String(g.id) === String(this.groupId)
-          );
+        this.group = found;
 
-          if (!found) {
-            this.group = null;
-            this.errorMessage = 'No se encontró el grupo';
-            return;
-          }
-
-          this.group = found;
-        },
-        error: (error: any) => {
-          this.group = null;
-          this.errorMessage =
-            error?.error?.message || 'No se pudo cargar el grupo';
+        if (!found) {
+          this.errorMessage = 'No se encontró el grupo';
+        } else {
+          this.errorMessage = '';
         }
-      });
+
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        this.errorMessage =
+          error?.error?.message || 'No se pudo cargar el grupo';
+        this.group = null;
+        this.isLoading = false;
+      }
+    });
   }
 
   addMember(): void {
